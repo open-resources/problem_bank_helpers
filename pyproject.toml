@@ -12,6 +12,7 @@ repository = "https://github.com/open-resources/problem_bank_helpers"
 [tool.poetry.dependencies]
 python = "^3.7"
 sigfig = "^1.1.9"
+numpy = "^1.20.3"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "^4.0.2"
@@ -20,6 +21,7 @@ ipykernel = "^5.5.5"
 sphinx-autoapi = "^1.8.1"
 sphinx-rtd-theme = "^0.5.2"
 sphinxcontrib-napoleon = "^0.7"
+pytest = "^6.2.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
