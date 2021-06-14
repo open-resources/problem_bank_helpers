@@ -5,6 +5,114 @@ from collections import defaultdict
 import numpy as np
 import sigfig
 
+def sigfigs(x):
+    '''Returns the number of significant digits in a number. This takes into account
+       strings formatted in 1.23e+3 format and even strings such as 123.450'''
+    # if x is negative, remove the negative sign from the string.
+    if float(x) < 0:
+        x = x[1:]
+    # change all the 'E' to 'e'
+    x = x.lower()
+    if ('e' in x):
+        # return the length of the numbers before the 'e'
+        myStr = x.split('e')
+        return len( myStr[0] ) - 1 # to compenstate for the decimal point
+    else:
+        # put it in e format and return the result of that
+        ### NOTE: because of the 8 below, it may do crazy things when it parses 9 sigfigs
+        n = ('%.*e' %(8, float(x))).split('e')
+        # remove and count the number of removed user added zeroes. (these are sig figs)
+        if '.' in x:
+            s = x.replace('.', '')
+            #number of zeroes to add back in
+            l = len(s) - len(s.rstrip('0'))
+            #strip off the python added zeroes and add back in the ones the user added
+            n[0] = n[0].rstrip('0') + ''.join(['0' for num in range(l)])
+        else:
+            #the user had no trailing zeroes so just strip them all
+            n[0] = n[0].rstrip('0')
+        #pass it back to the beginning to be parsed
+    return sigfigs('e'.join(n))
+    
+    
+# A function to rounding a number x keeping sig significant figures. 
+def round_sig(x, sig):
+    from math import log10, floor
+    if x == 0:
+        y = 0
+    else:
+        y = sig - int(floor(log10(abs(x)))) - 1
+    return round(x, y)
+
+# def round_sig(x, sig_figs = 3):
+#     """A function that rounds to specific significant digits. Original from SO: https://stackoverflow.com/a/3413529/2217577; adapted by Jake Bobowski
+
+#     Args:
+#         x (float): Number to round to sig figs
+#         sig_figs (int): Number of significant figures to round to; default is 3 (if unspecified)
+
+#     Returns:
+#         float: Rounded number to specified significant figures.
+#     """
+#     return round(x, sig_figs-int(np.floor(np.log10(np.abs(x))))-1)
+
+# If the absolute value of the submitted answers are greater than 1e4 or less than 1e-3, write the submitted answers using scientific notation.
+# Write the alternative format only if the submitted answers are not already expressed in scientific notation.
+# Attempt to keep the same number of sig figs that were submitted.    
+def sigFigCheck(subVariable, LaTeXstr, unitString):    
+    if subVariable is not None:
+        if (abs(subVariable) < 1e12 and abs(subVariable) > 1e4) or (abs(subVariable) < 1e-3 and abs(subVariable) > 1e-4):
+            decStr = "{:." + str(sigfigs(str(subVariable)) - 1) + "e}"
+            return("In scientific notation, $" + LaTeXstr + " =$ " + decStr.format(subVariable) + unitString + " was submitted.")
+        else:
+            return None
+            
+            
+# An error-checking function disigned to give hints if the submitted answer is:
+# (1) correct except for and overall sign or...
+# (2) the answer is right expect for the power of 10 multiplier or...
+# (3) answer has both a sign and exponent error.            
+def ErrorCheck(errorCheck, subVariable, Variable, LaTeXstr, tolerance):
+    import math, copy
+    from math import log10, floor
+    if errorCheck == 'true' or errorCheck == 'True' or errorCheck == 't' or errorCheck == 'T':
+        if subVariable is not None and subVariable != 0 and Variable != 0:
+            if math.copysign(1, subVariable) != math.copysign(1, Variable) and abs((abs(subVariable) - abs(Variable))/abs(Variable)) <= tolerance:
+                return("Check the sign of $" + LaTeXstr + "$.")
+            elif math.copysign(1, subVariable) == math.copysign(1, Variable) and \
+                    (abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable)/10**floor(log10(abs(Variable))))/(abs(Variable)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                    abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable/10)/10**floor(log10(abs(Variable))))/(abs(Variable/10)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                    abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable*10)/10**floor(log10(abs(Variable))))/(abs(Variable*10)/10**floor(log10(abs(Variable))))) <= tolerance) and \
+                    abs((abs(subVariable) - abs(Variable))/abs(Variable)) > tolerance:
+                return("Check the exponent of $" + LaTeXstr + "$.")
+            elif math.copysign(1, subVariable) != math.copysign(1, Variable) and \
+                    (abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable)/10**floor(log10(abs(Variable))))/(abs(Variable)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                    abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable/10)/10**floor(log10(abs(Variable))))/(abs(Variable/10)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                    abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable*10)/10**floor(log10(abs(Variable))))/(abs(Variable*10)/10**floor(log10(abs(Variable))))) <= tolerance) and \
+                    abs((abs(subVariable) - abs(Variable))/abs(Variable)) > tolerance:
+                return("Check the sign and exponent of $" + LaTeXstr + "$.")
+            else:
+                return None
+        else:
+            return None
+    else:
+        return None
+
+# def attribution(TorF, source = 'original', vol = 0, chapter = 0):
+#     if TorF == 'true' or TorF == 'True' or TorF == 't' or TorF == 'T':
+#         if source == 'OSUP':
+#             return('<hr></hr><p><font size="-1">From chapter ' + str(chapter) + ' of <a href="https://openstax.org/books/university-physics-volume-' + str(vol) + \
+#                     '/pages/' + str(chapter) + '-introduction" target="_blank">OpenStax University Physics volume ' + str(vol) + \
+#                     '</a> licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.</font><br> <font size="-1">Download for free at <a href="https://openstax.org/details/books/university-physics-volume-' + str(vol) + \
+#                     '" target="_blank">https://openstax.org/details/books/university-physics-volume-' + str(vol) + \
+#                     '</a>.</font><br> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"><pl-figure file-name="by.png" directory="clientFilesCourse" width="100px" inline="true"></pl-figure></a></p>')
+#         elif source == 'original':
+#             return('<hr></hr><p><font size="-1">Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>.</font><br><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><pl-figure file-name="byncsa.png" directory="clientFilesCourse" width="100px" inline="true"></pl-figure></a></p>')
+#         else:
+#             return None
+#     else:
+#         return None
+
 def roundp(*args,**kwargs):
     """ Wrapper function for the sigfig.round package.
 
@@ -34,18 +142,6 @@ def round_str(*args,**kwargs):
             return roundp(*args,**kwargs,format='sci')
     else:
         return roundp(*args,**kwargs)
-    
-def round_sig(x, sig_figs = 3):
-    """A function that rounds to specific significant digits. Original from SO: https://stackoverflow.com/a/3413529/2217577; adapted by Jake Bobowski
-
-    Args:
-        x (float): Number to round to sig figs
-        sig_figs (int): Number of significant figures to round to; default is 3 (if unspecified)
-
-    Returns:
-        float: Rounded number to specified significant figures.
-    """
-    return round(x, sig_figs-int(np.floor(np.log10(np.abs(x))))-1)
 
 def num_as_str(num, digits_after_decimal = 2):
     """Rounds numbers properly to specified digits after decimal place
