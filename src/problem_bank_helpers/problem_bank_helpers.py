@@ -183,7 +183,7 @@ def sign_str(number):
     Returns:
         str: Either '+' or '-'
     """
-    if (number == -1):
+    if (number < 0):
         return " - "
     else:
         return " + "
