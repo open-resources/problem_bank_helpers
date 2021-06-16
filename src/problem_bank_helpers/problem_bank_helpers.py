@@ -173,3 +173,17 @@ def num_as_str(num, digits_after_decimal = 2):
         tmp = Decimal(num).quantize(Decimal('1.'+'0'*digits_after_decimal))
 
         return str(tmp)
+
+def sign_str(number):
+    """Returns the sign of the input number as a string.
+
+    Args:
+        sign (number): A number, float, etc...
+
+    Returns:
+        str: Either '+' or '-'
+    """
+    if (number == -1):
+        return " - "
+    else:
+        return " + "
