@@ -5,6 +5,11 @@ from collections import defaultdict
 import numpy as np
 import sigfig
 
+def create_data2():
+
+    nested_dict = lambda: defaultdict(nested_dict)
+    return nested_dict
+
 def sigfigs(x):
     '''Returns the number of significant digits in a number. This takes into account
        strings formatted in 1.23e+3 format and even strings such as 123.450'''
