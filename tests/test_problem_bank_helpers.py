@@ -4,8 +4,7 @@ import pytest
 import random
 
 def test_version():
-
-    assert __version__ == '0.1.1'
+    assert __version__ == '0.1.3'
 
 @pytest.fixture
 def variables():
