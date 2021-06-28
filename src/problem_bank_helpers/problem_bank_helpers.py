@@ -5,6 +5,11 @@ from collections import defaultdict
 import numpy as np
 import sigfig
 
+def create_data2():
+
+    nested_dict = lambda: defaultdict(nested_dict)
+    return nested_dict()
+
 def sigfigs(x):
     '''Returns the number of significant digits in a number. This takes into account
        strings formatted in 1.23e+3 format and even strings such as 123.450'''
@@ -37,6 +42,7 @@ def sigfigs(x):
     
 # A function to rounding a number x keeping sig significant figures. 
 def round_sig(x, sig):
+    assert (sig>0)
     from math import log10, floor
     if x == 0:
         y = 0
