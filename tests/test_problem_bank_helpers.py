@@ -298,21 +298,59 @@ def test_sigFigCheck_moreThan1e12(sigFigCheckVariables):
     for i in numbers_moreThan1e12:
         assert (pbh.sigFigCheck(i, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == None)
 
+def test_sigFigCheck_trailingZeroes(sigFigCheckVariables):
+    numbers_trailingZeroes = {
+        15000: "1.5e+04",
+        20000: "2.0e+04",
+        1200000: "1.2e+06",
+        12300000: "1.23e+07",
+        10500000: "1.05e+07",
+        23000600: "2.3006e+07",
+        1000000001: "1.000000001e+09" 
+    }
+    for key, value in numbers_trailingZeroes.items():
+        assert (pbh.sigFigCheck(key, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == getCorrectString(value))
 
-def test_sigFigCheck_DecimalFormat(sigFigCheckVariables):
-    numbers_decimalFormat = {1.5e4: "1.5e+04",
+
+def test_sigFigCheck_trailingZeroes_DecimalFormat(sigFigCheckVariables):
+    numbers_decimalFormat = {15000.: "1.5000e+04",
+           1.5e4: "1.5e+04",
            1.5000e4: "1.5000e+04",
            1.56e5: "1.56e+05",
-           15000.: "1.5000e+04"}
-    for i in numbers_decimalFormat:
-        assert (pbh.sigFigCheck(i, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == getCorrectString(numbers_decimalFormat[i]))
+           15000.: "1.5000e+04",
+           1.540000e4: "1.540000e+04",
+           1.56000000e4: "1.56000000e+04"}
+    for key, value in numbers_decimalFormat.items():
+        assert (pbh.sigFigCheck(key, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == getCorrectString(value))
 
 def test_sigFigCheck_between_1e4And1e12(sigFigCheckVariables):
-    pass
+    numbers_between_1e4And1e12 = {
+        1.41e4: "1.41e+04",
+        1.520e5: "1.52e+05",
+        1.6300e5: "1.6300e+05",
+        1.74000e5: "1.74000e+05",
+        1.8500000e5: "1.8500000e+05",
+        1.96000000e6: "1.96000000e+06",
+        2.70005000e5: "2.70005000e+05",
+        3.69000001e5: "3.69000001e+05"
+    }
+    for key, value in numbers_between_1e4And1e12.items():
+        assert (pbh.sigFigCheck(key, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == getCorrectString(value))
 
 
 def test_sigFigCheck_between_1eMinus3And1eMinus4(sigFigCheckVariables):
-    pass
+    numbers_between_1eMinus3And1eMinus4 = {
+        0.41e-3: "4.1e-04",
+        0.520e-3: "5.20e-04",
+        1.290e-3: "1.290e-03",
+        1.45000e-4: "1.45000e-04",
+        1.8501e-4: "1.8501e-04",
+        1.96004000e-4: "1.96004000e-04",
+        1.150000001e-3: "1.150000001e-03",
+        3.690000001e-4: "3.690000001e-04"
+    }
+    for key, value in numbers_between_1eMinus3And1eMinus4.items():
+        assert (pbh.sigFigCheck(key, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == getCorrectString(value))
 
 
 
