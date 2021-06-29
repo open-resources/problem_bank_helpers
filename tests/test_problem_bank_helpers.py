@@ -21,20 +21,6 @@ def variables():
                     3.1415926535,
                     3.14159265358,
                     3.141592653589],
-              "negativeNumbers":[
-                    -3,
-                    -3.1,
-                    -3.14, 
-                    -3.141,
-                    -3.1415, 
-                    -3.14159,
-                    -3.141592,
-                    -3.1415926,
-                    -3.14159265,
-                    -3.141592653,
-                    -3.1415926535,
-                    -3.14159265358,
-                    -3.141592653589],
                "between0and1": 
                     [0.1,
                      0.12,
@@ -129,8 +115,8 @@ def test_sigfigs_upto12dp(variables):
         assert (pbh.sigfigs(variable) == correct_sigfigs)
 
 def test_sigfigs_negative(variables):
-    for i in range (0, len(variables["negativeNumbers"])):
-        variable = str(variables["negativeNumbers"][i])
+    for i in range (0, len(variables["sf"])):
+        variable = str(-1*variables["sf"][i])
         correct_sigfigs = i+1
         assert (pbh.sigfigs(variable) == correct_sigfigs)
 
@@ -219,10 +205,18 @@ def test_sign_str_zero():
 
 # round_sig tests
 
-# what is supposed to happen when the sf passed in is 0
 def test_round_sig_zero():
     assert (pbh.round_sig(0,1) == 0)
 
+def test_round_sig_trailing_zeroes(variables):
+    for i in range (0, len(variables["trailingZeroes"])):
+        variable = variables["trailingZeroes"][i]
+        correct_sigfigs = i+1
+        assert (pbh.round_sig(variable, correct_sigfigs) == variable)
+
+# no way to test until passed as string since python rounds off floating point numbers and remove trailing zeroes
+def test_round_sig_trailing_zeroes_decimal(variables):
+    pass
 
 def test_round_sig_single_digits(variables):
     for i in range (0, len(variables["singleDigits"])):
@@ -238,8 +232,8 @@ def test_round_sig_multiple_sf_positive(variables):
         assert (pbh.round_sig(variable, correct_sigfigs) == variable)
 
 def test_round_sig_multiple_sf_negative(variables):
-    for i in range (0, len(variables["negativeNumbers"])):
-        variable = variables["negativeNumbers"][i]
+    for i in range (0, len(variables["sf"])):
+        variable = -1*variables["sf"][i]
         correct_sigfigs = i+1
         assert (pbh.round_sig(variable, correct_sigfigs) == variable)
 
@@ -265,4 +259,62 @@ def test_round_sig_edge_cases():
     for i in range(0, l):
         assert (pbh.round_sig(n, l-i) == answers[i])
      
-      
+
+# sigFigCheck tests
+
+@pytest.fixture
+def sigFigCheckVariables():
+    inputs = { "units": "m/s",
+               "var": "x",
+    }   
+    return inputs
+
+def getCorrectString(correct_answer):
+    correct_string = f"In scientific notation, $x =$ {correct_answer}m/s was submitted."   
+    return correct_string
+
+def test_sigFigCheck_None(sigFigCheckVariables):
+    assert (pbh.sigFigCheck(None, sigFigCheckVariables["var"], sigFigCheckVariables["units"] ) == None)
+
+def test_sigFigCheck_edge_cases(sigFigCheckVariables):
+    edge_cases = [1e-4, 1e-3, 1e4, 1e12]
+    for n in edge_cases:
+        assert (pbh.sigFigCheck(n, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == None)
+
+
+def test_sigFigCheck_between_1eMinus3_and_1e4(sigFigCheckVariables):
+    for i in range(5,14):
+        n = int("1e"+str(i))
+        assert (pbh.sigFigCheck(n, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == None)
+
+
+def test_sigFigCheck_lessThan1eMinus4(sigFigCheckVariables):
+    numbers_lessThan1eMinus4 = [ random.uniform(1.e-100, 1.e-4) for i in range(50) ]
+    for i in numbers_lessThan1eMinus4:
+        assert (pbh.sigFigCheck(i, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == None)
+
+def test_sigFigCheck_moreThan1e12(sigFigCheckVariables):
+    numbers_moreThan1e12 = [ random.uniform((1.e12) + 1, 1.e100) for i in range(50) ]
+    for i in numbers_moreThan1e12:
+        assert (pbh.sigFigCheck(i, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == None)
+
+
+def test_sigFigCheck_DecimalFormat(sigFigCheckVariables):
+    numbers_decimalFormat = {1.5e4: "1.5e+04",
+           1.5000e4: "1.5000e+04",
+           1.56e5: "1.56e+05",
+           15000.: "1.5000e+04"}
+    for i in numbers_decimalFormat:
+        assert (pbh.sigFigCheck(i, sigFigCheckVariables["var"], sigFigCheckVariables["units"]) == getCorrectString(numbers_decimalFormat[i]))
+
+def test_sigFigCheck_between_1e4And1e12(sigFigCheckVariables):
+    pass
+
+
+def test_sigFigCheck_between_1eMinus3And1eMinus4(sigFigCheckVariables):
+    pass
+
+
+
+
+
