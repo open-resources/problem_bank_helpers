@@ -42,6 +42,7 @@ def sigfigs(x):
     
 # A function to rounding a number x keeping sig significant figures. 
 def round_sig(x, sig):
+    assert (sig>0)
     from math import log10, floor
     if x == 0:
         y = 0
