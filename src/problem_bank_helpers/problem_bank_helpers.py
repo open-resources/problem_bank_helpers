@@ -247,3 +247,23 @@ def gen_rand_poly(var, true_poly):
     expr = sympy_to_str(expr)
 
     return expr
+
+def gen_rand_num(low, high, range, true_ans):
+    """Returns a random number outside of a specified range of the true answer 
+    
+    Args:
+        low (integer, float): the lower bound of the interval within which a random number is desired to be generated
+        high (integer, float): the upper bound of the interval within which a random number is desired to be generated
+        range (integer, float): specifies the range from the true answer within which a number cannot be generated
+        true_ans (intger, float): the correct answer
+
+    Returns:
+        randnum (float): an unrounded random number outside of a specified range of the true answer 
+    """
+    
+    randnum = rd.uniform(low, high)
+    
+    while(randnum > (1-range)*true_ans  and randnum < (1+range)*true_ans):
+        randnum = rd.uniform(low, high)
+    
+    return randnum
