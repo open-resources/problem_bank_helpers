@@ -214,10 +214,8 @@ def gen_poly(var):
 
     return expr
 
-# function for converting a sympy expression to string for display
-# this is needed for the json conversion
 def sympy_to_str(expr):
-    """Returns the string representation of a sympy expression for display on PL
+    """Returns the string representation of a sympy expression for display (json conversion) on PL
     
     Args:
         expr (sympy expression): a sympy polynomial
@@ -230,3 +228,4 @@ def sympy_to_str(expr):
     str_expr = str_expr.replace("*", "")
 
     return str_expr
+
