@@ -3,6 +3,8 @@
 
 from collections import defaultdict
 import numpy as np
+import sympy as sp
+import random as rd
 import sigfig
 
 def create_data2():
@@ -192,3 +194,22 @@ def sign_str(number):
         return " - "
     else:
         return " + "
+
+def gen_poly(var):
+    """Returns a polynomial of at least 2 terms and at most 3 terms in a desired variable
+    
+    Args:
+        var (sympy symbol): the variable of the polynomial
+
+    Returns:
+        expr: A polynomial of at least 2 terms and at most 3 terms in the desired variable
+    """
+
+    # Generate list of coefficients.
+    # Use size = random.randint(2,3) to generate at most 3 terms
+    coeff_list = list(np.random.randint(low = -9,high = 10,size = rd.randint(2,3)))
+
+    # generate the expression 
+    expr = sum(co*var**i for i, co in enumerate(reversed(coeff_list),1))
+
+    return expr
