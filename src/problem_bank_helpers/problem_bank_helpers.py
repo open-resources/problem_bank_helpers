@@ -229,3 +229,21 @@ def sympy_to_str(expr):
 
     return str_expr
 
+def gen_rand_poly(var, true_poly):
+    """Returns an incorrect polynomial to be used in answer options
+    
+    Args:
+        var (sympy symbol): the variable of the polynomial
+        true_poly (sympy expression): the correct polynomial
+    
+    Returns:
+        expr (string): the string representation of the incorrect polynomial
+    """
+    expr = gen_poly(var)
+
+    while (expr == true_poly):
+        expr = gen_poly(var)
+
+    expr = sympy_to_str(expr)
+
+    return expr
