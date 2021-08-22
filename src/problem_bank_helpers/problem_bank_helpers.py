@@ -262,8 +262,17 @@ def gen_rand_num(low, high, range, true_ans):
     """
     
     randnum = rd.uniform(low, high)
-    
+
+    count = 0
+    k = 10 
+
     while(randnum > (1-range)*true_ans  and randnum < (1+range)*true_ans):
+        count += 1
         randnum = rd.uniform(low, high)
+
+        # break infinite loops
+        if (count > k):
+            randnum = np.inf
+            break
     
     return randnum
