@@ -261,6 +261,10 @@ def gen_rand_num(low, high, range, true_ans):
         randnum (float): an unrounded random number outside of a specified range of the true answer 
     """
     
+    # return infinity if a wrong interval is specified
+    if (low > high):
+        return np.inf
+
     randnum = rd.uniform(low, high)
 
     count = 0
