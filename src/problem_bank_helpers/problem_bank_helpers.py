@@ -213,3 +213,20 @@ def gen_poly(var):
     expr = sum(co*var**i for i, co in enumerate(reversed(coeff_list),1))
 
     return expr
+
+# function for converting a sympy expression to string for display
+# this is needed for the json conversion
+def sympy_to_str(expr):
+    """Returns the string representation of a sympy expression for display on PL
+    
+    Args:
+        expr (sympy expression): a sympy polynomial
+
+    Returns:
+        str_expr (string): the string representation of the sympy expression
+    """
+    str_expr = str(expr)
+    str_expr = str_expr.replace("**", "^")
+    str_expr = str_expr.replace("*", "")
+
+    return str_expr
