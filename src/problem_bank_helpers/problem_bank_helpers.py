@@ -130,7 +130,7 @@ def roundp(*args,**kwargs):
     a = [item for item in args]
     kw = {item:v for item,v in kwargs.items() if item in ['sigfigs', 'decimals']}
         
-    num_str = str(a[0])
+    num_str = str(float(a[0]))
         
     # Add trailing zeroes if needed
     
