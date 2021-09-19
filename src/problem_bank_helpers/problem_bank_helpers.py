@@ -119,7 +119,7 @@ def ErrorCheck(errorCheck, subVariable, Variable, LaTeXstr, tolerance):
 #         return None
 
 def roundp(*args,**kwargs):
-    """ Wrapper function for the sigfig.round package.
+    """ Wrapper function for the sigfig.round package. Also deals with case if requested sig figs is more than provided.
 
     Args:
         num (number): Number to round or format.
@@ -127,8 +127,30 @@ def roundp(*args,**kwargs):
     Returns:
         float/str: Rounded number output to correct significant figures.
     """
+    a = [item for item in args]
+    kw = {item:v for item,v in kwargs.items() if item in ['sigfigs', 'decimals']}
+        
+    num_str = str(a[0])
+        
+    # Add trailing zeroes if needed
     
-    return sigfig.round(*args,**kwargs)
+    if kw.get('sigfigs',None):
+        z = kw['sigfigs']
+    elif kw.get('decimals', None):
+        z = kw['decimals']
+                        
+    if len(num_str) < z:
+        num_str = num_str + str(0)*z*2
+                
+    result = sigfig.round(num_str,**kwargs)
+        
+    # Switch back to the original format if it was a float
+    if isinstance(a[0],float):
+        return float(result) # Note, sig figs will not be carried through if this is a float
+    elif isinstance(a[0],str):
+        return result
+    else:
+        raise NotImplementedError
 
 def round_str(*args,**kwargs):
     
