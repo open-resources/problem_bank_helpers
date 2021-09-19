@@ -151,6 +151,8 @@ def roundp(*args,**kwargs):
         return float(result) # Note, sig figs will not be carried through if this is a float
     elif isinstance(a[0],str):
         return result
+    elif isinstance(a[0],int):
+        return int(float(result))
     else:
         return sigfig.round(*args,**kwargs)
 
