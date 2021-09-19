@@ -138,6 +138,8 @@ def roundp(*args,**kwargs):
         z = kw['sigfigs']
     elif kw.get('decimals', None):
         z = kw['decimals']
+    else:
+        z = 3 # Default sig figs
                         
     if len(num_str) < z:
         num_str = num_str + str(0)*z*2
@@ -150,7 +152,7 @@ def roundp(*args,**kwargs):
     elif isinstance(a[0],str):
         return result
     else:
-        raise NotImplementedError
+        return sigfig.round(*args,**kwargs)
 
 def round_str(*args,**kwargs):
     
