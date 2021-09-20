@@ -141,8 +141,7 @@ def roundp(*args,**kwargs):
     else:
         z = 3 # Default sig figs
                         
-    if len(num_str) < z:
-        num_str = num_str + str(0)*z*2
+    num_str = num_str + str(0)*z*2
                 
     result = sigfig.round(num_str,**kwargs)
         
