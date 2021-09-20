@@ -1,3 +1,3 @@
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 from .problem_bank_helpers import *
