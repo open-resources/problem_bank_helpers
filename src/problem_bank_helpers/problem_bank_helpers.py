@@ -5,16 +5,19 @@ from collections import defaultdict
 import numpy as np
 import sigfig
 import pandas as pd
+import os
 
 ## Load data and dictionaries
 #global names,jumpers,vehicles,manual_vehicles,metals,T_c
-names = pd.read_csv("data/names.csv")["Names"].tolist()
-jumpers = pd.read_csv("data/jumpers.csv")["Jumpers"].tolist()
-vehicles = pd.read_csv("data/vehicles.csv")["Vehicles"].tolist()
-manual_vehicles = pd.read_csv("data/manual_vehicles.csv")["Manual Vehicles"].tolist()
-metals = pd.read_csv("data/metals.csv")["Metal"].tolist()
-T_c = pd.read_csv("data/metals.csv")["Temp Coeffecient"].tolist()
+names = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/names.csv")["Names"].tolist()
+jumpers = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/jumpers.csv")["Jumpers"].tolist()
+vehicles = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/vehicles.csv")["Vehicles"].tolist()
+manual_vehicles = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/manual_vehicles.csv")["Manual Vehicles"].tolist()
+metals = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/metals.csv")["Metal"].tolist()
+T_c = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/metals.csv")["Temp Coefficient"].tolist()
 ## End Load data
+
+print(f"Current CWD: {os.getcwd()}")
 
 def create_data2():
 
