@@ -4,6 +4,17 @@
 from collections import defaultdict
 import numpy as np
 import sigfig
+import pandas as pd
+
+## Load data and dictionaries
+#global names,jumpers,vehicles,manual_vehicles,metals,T_c
+names = pd.read_csv("data/names.csv")["Names"].tolist()
+jumpers = pd.read_csv("data/jumpers.csv")["Jumpers"].tolist()
+vehicles = pd.read_csv("data/vehicles.csv")["Vehicles"].tolist()
+manual_vehicles = pd.read_csv("data/manual_vehicles.csv")["Manual Vehicles"].tolist()
+metals = pd.read_csv("data/metals.csv")["Metal"].tolist()
+T_c = pd.read_csv("data/metals.csv")["Temp Coeffecient"].tolist()
+## End Load data
 
 def create_data2():
 
