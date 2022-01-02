@@ -17,8 +17,6 @@ metals = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_b
 T_c = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/metals.csv")["Temp Coefficient"].tolist()
 ## End Load data
 
-print(f"Current CWD: {os.getcwd()}")
-
 def create_data2():
 
     nested_dict = lambda: defaultdict(nested_dict)
