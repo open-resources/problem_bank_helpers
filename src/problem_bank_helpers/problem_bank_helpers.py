@@ -229,3 +229,15 @@ def sign_str(number):
         return " - "
     else:
         return " + "
+    
+def sympy_to_pretty_string(expr): 
+    """Returns a string which can be used in question.html files.
+    
+    Args: 
+        expr (Sympy object)
+    Returns: 
+        str: A string which looks nice for question.html files.
+    """
+    srt_expr = string(expr)
+    str_expr = str_expr.replace('**','^')
+    str_expr = str_expr.replace('*','')
