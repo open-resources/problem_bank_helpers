@@ -3,6 +3,8 @@
 
 from collections import defaultdict
 import numpy as np
+import sympy as sp
+import random as rd
 import sigfig
 import pandas as pd
 import os
@@ -229,3 +231,89 @@ def sign_str(number):
         return " - "
     else:
         return " + "
+
+def gen_poly(var):
+    """Returns a polynomial of at least 2 terms and at most 3 terms in a desired variable
+    
+    Args:
+        var (sympy symbol): the variable of the polynomial
+
+    Returns:
+        expr: A polynomial of at least 2 terms and at most 3 terms in the desired variable
+    """
+
+    # Generate list of coefficients.
+    # Use size = random.randint(2,3) to generate at most 3 terms
+    coeff_list = list(np.random.randint(low = -9,high = 10,size = rd.randint(2,3)))
+
+    # generate the expression 
+    expr = sum(co*var**i for i, co in enumerate(reversed(coeff_list),1))
+
+    return expr
+
+def sympy_to_str(expr):
+    """Returns the string representation of a sympy expression for display (json conversion) on PL
+    
+    Args:
+        expr (sympy expression): a sympy polynomial
+
+    Returns:
+        str_expr (string): the string representation of the sympy expression
+    """
+    str_expr = str(expr)
+    str_expr = str_expr.replace("**", "^")
+    str_expr = str_expr.replace("*", "")
+
+    return str_expr
+
+def gen_rand_poly(var, true_poly):
+    """Returns an incorrect polynomial to be used in answer options
+    
+    Args:
+        var (sympy symbol): the variable of the polynomial
+        true_poly (sympy expression): the correct polynomial
+    
+    Returns:
+        expr (string): the string representation of the incorrect polynomial
+    """
+    expr = gen_poly(var)
+
+    while (expr == true_poly):
+        expr = gen_poly(var)
+
+    expr = sympy_to_str(expr)
+
+    return expr
+
+def gen_rand_num(low, high, range, true_ans):
+    """Returns a random number outside of a specified range of the true answer 
+    
+    Args:
+        low (integer, float): the lower bound of the interval within which a random number is desired to be generated
+        high (integer, float): the upper bound of the interval within which a random number is desired to be generated
+        range (integer, float): specifies the range from the true answer within which a number cannot be generated
+        true_ans (intger, float): the correct answer
+
+    Returns:
+        randnum (float): an unrounded random number outside of a specified range of the true answer 
+    """
+    
+    # return infinity if a wrong interval is specified
+    if (low > high):
+        return np.inf
+
+    randnum = rd.uniform(low, high)
+
+    count = 0
+    k = 10 
+
+    while(randnum > (1-range)*true_ans  and randnum < (1+range)*true_ans):
+        count += 1
+        randnum = rd.uniform(low, high)
+
+        # break infinite loops
+        if (count > k):
+            randnum = np.inf
+            break
+    
+    return randnum
