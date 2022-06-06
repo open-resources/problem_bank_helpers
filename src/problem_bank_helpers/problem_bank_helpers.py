@@ -229,3 +229,57 @@ def sign_str(number):
         return " - "
     else:
         return " + "
+
+################################################
+#
+# Feedback and Hint Section
+#
+################################################
+
+def automatic_feedback(data,string_rep = None,rtol = None):
+
+    # In grade(date), put: data = automatic_feedback(data)
+
+    if string_rep is None:
+        string_rep = data['correct_answers'].keys()
+    if rtol is None:
+        rtol = 0.03
+
+    for i,ans in enumerate(data['correct_answers'].keys()):
+        data["feedback"][ans] = ErrorCheck(data['submitted_answers'][ans],
+                                           data['correct_answers'][ans],
+                                           string_rep[i],
+                                           rtol)
+
+    return data
+
+
+# An error-checking function designed to give hints if the submitted answer is:
+# (1) correct except for and overall sign or...
+# (2) the answer is right expect for the power of 10 multiplier or...
+# (3) answer has both a sign and exponent error.            
+def ErrorCheck(subVariable, Variable, LaTeXstr, tolerance):
+    import math
+    from math import log10, floor
+    
+    if subVariable is not None and subVariable != 0 and Variable != 0:
+        if math.copysign(1, subVariable) != math.copysign(1, Variable) and abs((abs(subVariable) - abs(Variable))/abs(Variable)) <= tolerance:
+            return("Check the sign of $" + LaTeXstr + "$.")
+        elif math.copysign(1, subVariable) == math.copysign(1, Variable) and \
+                (abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable)/10**floor(log10(abs(Variable))))/(abs(Variable)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable/10)/10**floor(log10(abs(Variable))))/(abs(Variable/10)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable*10)/10**floor(log10(abs(Variable))))/(abs(Variable*10)/10**floor(log10(abs(Variable))))) <= tolerance) and \
+                abs((abs(subVariable) - abs(Variable))/abs(Variable)) > tolerance:
+            return("Check the exponent of $" + LaTeXstr + "$.")
+        elif math.copysign(1, subVariable) != math.copysign(1, Variable) and \
+                (abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable)/10**floor(log10(abs(Variable))))/(abs(Variable)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable/10)/10**floor(log10(abs(Variable))))/(abs(Variable/10)/10**floor(log10(abs(Variable))))) <= tolerance or \
+                abs((abs(subVariable)/10**floor(log10(abs(subVariable))) - abs(Variable*10)/10**floor(log10(abs(Variable))))/(abs(Variable*10)/10**floor(log10(abs(Variable))))) <= tolerance) and \
+                abs((abs(subVariable) - abs(Variable))/abs(Variable)) > tolerance:
+            return("Check the sign and exponent of $" + LaTeXstr + "$.")
+        elif math.copysign(1, subVariable) == math.copysign(1, Variable) and abs((abs(subVariable) - abs(Variable))/abs(Variable)) <= tolerance:
+            return("Nice work, $" + LaTeXstr + "$ is correct!")
+        else:
+            return None
+    else:
+        return None
