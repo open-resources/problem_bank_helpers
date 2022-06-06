@@ -241,7 +241,7 @@ def automatic_feedback(data,string_rep = None,rtol = None):
     # In grade(date), put: data = automatic_feedback(data)
 
     if string_rep is None:
-        string_rep = data['correct_answers'].keys()
+        string_rep = list(data['correct_answers'].keys())
     if rtol is None:
         rtol = 0.03
 
