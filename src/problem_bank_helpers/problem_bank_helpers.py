@@ -8,7 +8,7 @@ import pandas as pd
 import os
 
 ## Load data and dictionaries
-#global names,jumpers,vehicles,manual_vehicles,metals,T_c
+animals = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/animals.csv")["Animals"].tolist()
 names = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/names.csv")["Names"].tolist()
 jumpers = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/jumpers.csv")["Jumpers"].tolist()
 vehicles = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/vehicles.csv")["Vehicles"].tolist()
