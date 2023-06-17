@@ -143,6 +143,21 @@ def test_roundsig(test_input, expected_output):
 
 @pytest.mark.parametrize(
     "test_input, expected_output",
+    [(123.123456789, [123, 123.1, 123.12, 123.123, 123.1235, 123.12346, 123.123457, 123.1234568, 123.12345679, 123.123456789]),
+     (0.123456789, [0, 0.1, 0.12, 0.123, 0.1235, 0.12346, 0.123457, 0.1234568, 0.12345679, 0.123456789]),
+     (0.000123456, [0, 0, 0, 0, 0.0001, 0.00012, 0.000123, 0.0001234, 0.00012345, 0.000123456])]
+)
+def test_numasstr(test_input, expected_output):
+    if abs(test_input >= 1):
+        for i in range(10):
+            assert (pbh.num_as_str(test_input, i) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
+    if abs(test_input < 1):
+        for i in range(10):
+            assert (pbh.num_as_str(test_input, i) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
+
+
+@pytest.mark.parametrize(
+    "test_input, expected_output",
     []
 )
 def test_round_sig(test_input, expected_output):
