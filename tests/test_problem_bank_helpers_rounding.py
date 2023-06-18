@@ -165,7 +165,7 @@ def test_roundsig(test_input, expected_output):
     (True, 2, '1.00'),  # Test rounding a non-numeric input
     (10.00, 2, '10.00'),  # Test rounding a float that is already rounded to specified digits after decimal
 ])
-def test_num_as_str_defaultdp(num, digits_after_decimal, expected_result):
+def test_num_as_str(num, digits_after_decimal, expected_result):
     assert pbh.num_as_str(num, digits_after_decimal) == expected_result
 
 
