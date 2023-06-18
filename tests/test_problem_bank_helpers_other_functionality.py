@@ -5,54 +5,55 @@ import numpy as np
 import pandas as pd
 import os
 import pytest
+import pathlib
 import csv
 
 def test_version():
     assert __version__ == '0.1.13'
 
-def validate_csv_file(csv_file):
-    # Read the CSV file using pandas
-    df = pd.read_csv(csv_file)
-
-    # Perform validation checks using pandas and csv module
-    # Add your validation logic here
-    # You can use pandas functions and csv module functions to perform the required checks
-
-    # Example checks:
-    # 1. Check if all required columns are present
-    required_columns = ['column1', 'column2', 'column3']
-    missing_columns = [col for col in required_columns if col not in df.columns]
-    assert len(missing_columns) == 0, f"Missing columns: {missing_columns}"
-
-    # 2. Check data types of specific columns
-    expected_data_types = {'column1': int, 'column2': float}
-    for column, data_type in expected_data_types.items():
-        assert df[column].dtype == data_type, f"Invalid data type for column '{column}'"
-
-    # Add more validation checks as needed
-
-    # If all checks pass, return True indicating that the CSV file is valid
-    return True
-
-# Validate csv files
-@pytest.mark.parametrize('name, columns',
-    [('animals',[]),
-     ('names',[]),
-     ('jumpers',[]),
-     ('manual_vehicles',[]),
-     ('vehicles',[]),
-     ('metals',[]),
-])
-def test_validate_csv():
-    csv_file = 'path/to/test.csv'  # Path to the test CSV file
-
-    # Call the validation function and assert that it returns True
-    assert validate_csv_file(csv_file) == True
-
-@pytest.mark.parametrize(
-    "test_group",
-    # perhaps group all csv imports in pbh in a list for maintainability
-    [pbh.animals, pbh.names, pbh.jumpers, pbh.vehicles, pbh.manual_vehicles, pbh.metals, pbh.T_c]
+files = sorted(
+    [
+        file.name
+        for file in pathlib.Path(
+            "data/"
+        ).iterdir()
+    ]
 )
-def test_csv_imports(test_group):
-    assert type(test_group) is list, f"this test group is not a list type"
+
+files = [("data/" + f) for f in files if f != 'empty.csv']
+
+
+@pytest.mark.parametrize("file_path", files)
+def test_load_csv(file_path):
+    try:
+        # Load the CSV file using pandas
+        data = pd.read_csv(file_path)
+
+        # Assert that data is loaded successfully
+        assert data is not None
+
+        assert type(data) is pd.DataFrame
+
+        # number of rows and columns:
+        # assert data.shape[0] == expected_num_rows
+        assert data.shape[1] == 1
+
+    except IOError:
+        # Handle file loading errors appropriately
+        pytest.fail(f"Error loading file: {file_path}")
+
+    except pd.errors.ParserError:
+        # Handle CSV parsing errors appropriately
+        pytest.fail(f"Error parsing CSV file: {file_path}")
+
+
+def test_empty_csv():
+    # Test loading an empty CSV file
+    file_path = "data/empty.csv"
+
+    # Create an empty CSV file
+    with open(file_path, 'w') as csvfile:
+        pass
+
+    with pytest.raises(pd.errors.EmptyDataError):
+        test_load_csv(file_path)
