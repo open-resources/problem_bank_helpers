@@ -133,12 +133,8 @@ def test_sigfigs(test_group, variables):
      (0.123456789, [0.1, 0.12, 0.123, 0.1235, 0.12346, 0.123457, 0.1234568, 0.12345679, 0.123456789])]
 )
 def test_roundsig(test_input, expected_output):
-    if abs(test_input >= 1):
-        for i in range(9):
-            assert (pbh.round_sig(test_input, i + 1) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
-    if abs(test_input < 1):
-        for i in range(9):
-            assert (pbh.round_sig(test_input, i + 1) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
+    for i in range(9):
+        assert (pbh.round_sig(test_input, i + 1) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
 
 
 @pytest.mark.parametrize(
@@ -150,11 +146,7 @@ def test_roundsig(test_input, expected_output):
 def test_numasstr(test_input, expected_output):
     if abs(test_input >= 1):
         for i in range(10):
-            assert (pbh.num_as_str(test_input, i) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
-    if abs(test_input < 1):
-        for i in range(10):
-            assert (pbh.num_as_str(test_input, i) == expected_output[i]), f"round_sig({test_input}, {i+1}) = {pbh.round_sig(test_input, i+1)} did not match expected output: {expected_output[i]}"
-
+            assert (pbh.num_as_str(test_input, i) == str(expected_output[i])), f"num_as_str({test_input}, {i}) = {pbh.num_as_str(test_input, i)} did not match expected output: {expected_output[i]}"
 
 @pytest.mark.parametrize(
     "test_input, expected_output",
