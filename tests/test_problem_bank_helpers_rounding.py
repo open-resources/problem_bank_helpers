@@ -50,15 +50,15 @@ test_values = {"between0and1":
                     1234500000,
                 ],
                 "emptyDecimal":[
-                    1.,
-                    10.,
-                    100.,
-                    1000.,
-                    10000.,
-                    100000.,
-                    1000000.,
-                    10000000.,
-                    100000000.
+                    "1.",
+                    "10.",
+                    "100.",
+                    "1000.",
+                    "10000.",
+                    "100000.",
+                    "1000000.",
+                    "10000000.",
+                    "100000000."
                 ],
                 "zeroDecimal":[
                     "1.0",
@@ -83,10 +83,10 @@ test_values = {"between0and1":
                     11111111
                 ],
                 "eFormat":[
-                    "1e+10",
-                    "1.1e+10",
-                    "1.12e+20",
-                    "1.123e+30"
+                    "1e10",
+                    "1.1e10",
+                    "1.12e20",
+                    "1.123e30"
                 ]}
 
 group_names = list(test_values.keys())
@@ -115,7 +115,7 @@ def test_sigfigs(test_group, variables):
         elif test_group == "trailingZeros":
             correct_sigfigs = i+1
         elif test_group == "emptyDecimal":
-            correct_sigfigs = 1
+            correct_sigfigs = i+1
         elif test_group == "zeroDecimal":
             correct_sigfigs = i+2
         elif test_group == "largeNumbers":
@@ -124,7 +124,10 @@ def test_sigfigs(test_group, variables):
             correct_sigfigs = i+1
         else:
             pytest.fail(f"test group is not defined (got: '{test_group}')")
-        assert (pbh.sigfigs(test_input) == correct_sigfigs)
+        assert (pbh.sigfigs(test_input) == correct_sigfigs), f"input: {test_input}"
+def test_sigfigsfail():
+    with pytest.raises(Exception):
+        pbh.sigfigs(float(1))
 
 
 # Test round_sig function
@@ -138,58 +141,81 @@ def test_roundsig(test_input, expected_output):
     for i in range(9):
         assert (pbh.round_sig(test_input, i + 1) == expected_output[i])
 
-# Test num_as_str function
-@pytest.mark.parametrize(
-    "test_input, expected_output",
-    [(123.456789000, ["123", "123.5", "123.46", "123.457", "123.4568", "123.45679", "123.456789", "123.4567890", "123.45678900", "123.456789000"]),
-     (0.123456789, [0, 0.1, 0.12, 0.123, 0.1235, 0.12346, 0.123457, 0.1234568, 0.12345679, 0.123456789]),
-     (0.000123456, [0, 0, 0, 0, 0.0001, 0.00012, 0.000123, 0.0001234, 0.00012345, 0.000123456]),
-     (4.967489, ["5", "5.0", "4.97", "4.967", "4.9675", "4.96749", "4.967489", "4.9674890", "4.96748900", "4.967489000"])]
-)
-def test_numasstr(test_input, expected_output):
-    if abs(test_input >= 1):
-        for i in range(10):
-            assert (pbh.num_as_str(test_input, i) == str(expected_output[i]))
+
+@pytest.mark.parametrize('num, digits_after_decimal, expected_result', [
+    (3.14159, 2, '3.14'),  # Test rounding a positive float to 2 digits after decimal
+    (-2.71828, 2, '-2.72'),  # Test rounding a negative float to 2 digits after decimal
+    (0, 2, '0.00'),  # Test rounding zero to 2 digits after decimal
+    (123.456, 0, '123'),  # Test rounding a float to 0 digits after decimal
+    (7.7777777, 2, '7.78'),  # Test rounding a float with more than 2 digits after decimal
+    (9.99, 2, '9.99'),  # Test rounding a float with exactly 2 digits after decimal
+    (2.555, 4, '2.5550'),  # Test rounding a float with fewer digits after decimal than specified
+    (1.23456789, 6, '1.234568'),  # Test rounding a float with more digits after decimal than specified
+    (1e18, 2, '1000000000000000000.00'),  # Test rounding a very large positive float
+    (1e-18, 2, '0.00'),  # Test rounding a very small positive float (close to zero)
+    (-1e18, 2, '-1000000000000000000.00'),  # Test rounding a very large negative float
+    (-1e-18, 2, '-0.00'),  # Test rounding a very small negative float (close to zero)
+    (1.999, 2, '2.00'),  # Test rounding up
+    (2.001, 2, '2.00'),  # Test rounding down
+    (1.555, 2, '1.56'),  # Test rounding halfway between two rounded values
+    (-1.5, 2, '-2.00'),  # Test rounding halfway between negative and positive values
+    (1234567890.123456789, 8, '1234567890.12345679'),  # Test rounding a float with a large number of digits before and after decimal
+    (987.654321, -2, '1000.00'),  # Test rounding a float with a negative number of digits after decimal
+    (42.123, 0, '42'),  # Test rounding a float with zero value for digits_after_decimal
+    (True, 2, '1.00'),  # Test rounding a non-numeric input
+    (10.00, 2, '10.00'),  # Test rounding a float that is already rounded to specified digits after decimal
+])
+def test_num_as_str_defaultdp(num, digits_after_decimal, expected_result):
+    assert pbh.num_as_str(num, digits_after_decimal) == expected_result
+
+
+def test_num_as_str_invalid_args_kwargs():
+    with pytest.raises(TypeError):
+        pbh.num_as_str(123.45, 2, "args")  # Function should not accept *args
+
+    with pytest.raises(TypeError):
+        pbh.num_as_str(123.45, 2, digits_after_decimal=2)  # Function should not accept **kwargs
+
 
 # Test roundp function
 def test_roundp():
-    # Test rounding a float with specified sigfigs
+    """Test rounding a float with specified sigfigs"""
     assert pbh.roundp(123.456, sigfigs=2) == 120.0
 
-    # Test rounding an integer with specified decimals
+    """Test rounding an integer with specified decimals"""
     assert pbh.roundp(987, decimals=2) == 987.0
 
-    # Test rounding a string with default sigfigs
+    """Test rounding a string with default sigfigs"""
     assert pbh.roundp('99.8765') == '100'
 
-    # Test rounding a float with format='std'
+    """Test rounding a float with format='std'"""
     assert pbh.roundp(0.123, format='std') == 0.12
 
-    # Test rounding a float with format='English'
+    """Test rounding a float with format='English'"""
     assert pbh.roundp(12345.6789, format='English') == 12300.0
 
-    # Test rounding a float with format='sci'
+    """Test rounding a float with format='sci'"""
     assert pbh.roundp(0.000123, format='sci') == '1.20e-04'
 
 # Test round_str function
 def test_roundstr():
-    # Test passing a string as the argument
+    """Test passing a string as the argument"""
     assert pbh.round_str('Hello') == 'Hello'
 
-    # Test rounding a float without specifying sigfigs or format
+    """Test rounding a float without specifying sigfigs or format"""
     assert pbh.round_str(123.456) == '123'
 
-    # Test rounding a float with specified sigfigs
+    """Test rounding a float with specified sigfigs"""
     assert pbh.round_str(123.456, sigfigs=2) == 120.0
 
-    # Test rounding a float with specified format='English'
+    """Test rounding a float with specified format='English'"""
     assert pbh.round_str(12345.6789, format='English') == 12300.0
 
-    # Test rounding a float with specified format='sci'
+    """Test rounding a float with specified format='sci'"""
     assert pbh.round_str(0.000123, format='sci') == '1.20e-04'
 
-    # Test rounding a float with specified sigfigs and format='std'
+    """Test rounding a float with specified sigfigs and format='std'"""
     assert pbh.round_str(0.123, sigfigs=3, format='std') == 0.120
 
-    # Test rounding an integer with specified decimals and format='sci'
+    """Test rounding an integer with specified decimals and format='sci'"""
     assert pbh.round_str(987, decimals=2, format='sci') == '9.87e+02'
