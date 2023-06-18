@@ -57,3 +57,12 @@ def test_empty_csv():
 
     with pytest.raises(pd.errors.EmptyDataError):
         test_load_csv(file_path)
+
+
+@pytest.mark.parametrize("file_path", files)
+def test_missing_values(file_path):
+    # Load the CSV file using pandas
+    data = pd.read_csv(file_path)
+
+    # Test for missing or null values
+    assert data.isnull().sum().sum() == 0
