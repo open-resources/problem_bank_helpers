@@ -102,8 +102,8 @@ def variables():
     group_names
 )
 def test_sigfigs(test_group, variables):
-    for i in range (0, len(variables[test_group])):
-        test_input = str(variables[test_group][i])
+    for i, test_input in enumerate(variables[test_group]):
+        test_input = str(test_input)
         if test_group == "sf":
             correct_sigfigs = i+1
         elif test_group == "between0and1":
