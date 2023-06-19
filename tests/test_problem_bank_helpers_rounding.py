@@ -141,32 +141,37 @@ def test_roundsig(test_input, expected_output):
     for i in range(9):
         assert (pbh.round_sig(test_input, i + 1) == expected_output[i])
 
+def idfn(input):
+    if str(input)[0:3] == "id_":
+        return input
+    return ""
 
-@pytest.mark.parametrize('num, digits_after_decimal, expected_result', [
-    (3.14159, 2, '3.14'),  # Test rounding a positive float to 2 digits after decimal
-    (-2.71828, 2, '-2.72'),  # Test rounding a negative float to 2 digits after decimal
-    (0, 2, '0.00'),  # Test rounding zero to 2 digits after decimal
-    (123.456, 0, '123'),  # Test rounding a float to 0 digits after decimal
-    (7.7777777, 2, '7.78'),  # Test rounding a float with more than 2 digits after decimal
-    (9.99, 2, '9.99'),  # Test rounding a float with exactly 2 digits after decimal
-    (2.555, 4, '2.5550'),  # Test rounding a float with fewer digits after decimal than specified
-    (1.23456789, 6, '1.234568'),  # Test rounding a float with more digits after decimal than specified
-    (1e18, 2, '1000000000000000000.00'),  # Test rounding a very large positive float
-    (1e-18, 2, '0.00'),  # Test rounding a very small positive float (close to zero)
-    (-1e18, 2, '-1000000000000000000.00'),  # Test rounding a very large negative float
-    (-1e-18, 2, '-0.00'),  # Test rounding a very small negative float (close to zero)
-    (1.999, 2, '2.00'),  # Test rounding up
-    (2.001, 2, '2.00'),  # Test rounding down
-    (1.555, 2, '1.56'),  # Test rounding halfway between two rounded values
-    (-1.5, 2, '-2.00'),  # Test rounding halfway between negative and positive values
-    (1234567890.123456789, 8, '1234567890.12345679'),  # Test rounding a float with a large number of digits before and after decimal
-    (987.654321, -2, '1000.00'),  # Test rounding a float with a negative number of digits after decimal
-    (42.123, 0, '42'),  # Test rounding a float with zero value for digits_after_decimal
-    (True, 2, '1.00'),  # Test rounding a non-numeric input
-    (10.00, 2, '10.00'),  # Test rounding a float that is already rounded to specified digits after decimal
-])
-def test_num_as_str(num, digits_after_decimal, expected_result):
-    assert pbh.num_as_str(num, digits_after_decimal) == expected_result
+@pytest.mark.parametrize('id, input, digits_after_decimal, expected_result', [
+    ('id_positive float',3.14159, 2, '3.14'),  # Test rounding a positive float to 2 digits after decimal
+    ('id_negative float',-2.71828, 2, '-2.72'),  # Test rounding a negative float to 2 digits after decimal
+    ('id_zero float',0, 2, '0.00'),  # Test rounding zero to 2 digits after decimal
+    ('id_float to 0 dp',123.456, 0, '123'),  # Test rounding a float to 0 digits after decimal
+    ('id_float with many digits',7.7777777, 2, '7.78'),  # Test rounding a float with more than 2 digits after decimal
+    ('id_same dp',9.99, 2, '9.99'),  # Test rounding a float with exactly 2 digits after decimal
+    ('id_more dp',2.555, 4, '2.5550'),  # Test rounding a float with fewer digits after decimal than specified
+    ('id_to fewer dp',1.23456789, 6, '1.234568'),  # Test rounding a float with more digits after decimal than specified
+    ('id_large positive float',1e18, 2, '1000000000000000000.00'),  # Test rounding a very large positive float
+    ('id_small positive float',1e-18, 2, '0.00'),  # Test rounding a very small positive float (close to zero)
+    ('id_large negative float',-1e18, 2, '-1000000000000000000.00'),  # Test rounding a very large negative float
+    ('id_small negative float',-1e-18, 2, '-0.00'),  # Test rounding a very small negative float (close to zero)
+    ('id_round up',1.999, 2, '2.00'),  # Test rounding up
+    ('id_round down',2.001, 2, '2.00'),  # Test rounding down
+    ('id_halfway between rounded values',1.555, 2, '1.56'),  # Test rounding halfway between two rounded values
+    ('id_halfway between negative values',-1.5, 2, '-2.00'),  # Test rounding halfway between negative and positive values
+    ('id_many digits',1234567890.123456789, 8, '1234567890.12345679'),  # Test rounding a float with a large number of digits before and after decimal
+    ('id_negative digits rounding',987.654321, -2, '1000.00'),  # Test rounding a float with a negative number of digits after decimal
+    ('id_boolean input',True, 2, '1.00'),  # Test rounding a non-numeric input
+    ('id_same dp zeros',10.00, 2, '10.00'),  # Test rounding a float that is already rounded to specified digits after decimal
+    ],
+    ids=idfn
+)
+def test_num_as_str(id, input, digits_after_decimal, expected_result):
+    assert pbh.num_as_str(input, digits_after_decimal) == expected_result
 
 def test_num_as_str_default_dp():
     """test default decimal places"""
