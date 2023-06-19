@@ -178,22 +178,27 @@ def test_num_as_str_invalid_args_kwargs():
 
 
 # Test roundp function
-def test_roundp():
+def test_roundp_with_overriden_sigfig_settings():
     """Test rounding a float with specified sigfigs"""
     assert pbh.roundp(123.456, sigfigs=2) == 120.0
 
+def test_roundp_with_overriden_decimal_settings():
     """Test rounding an integer with specified decimals"""
     assert pbh.roundp(987, decimals=2) == 987.0
 
+def test_roundp_with_default_settings():
     """Test rounding a string with default sigfigs"""
     assert pbh.roundp('99.8765') == '100'
 
+def test_roundp_with_format_std():
     """Test rounding a float with format='std'"""
     assert pbh.roundp(0.123, format='std') == 0.12
 
+def test_roundp_with_format_english():
     """Test rounding a float with format='English'"""
     assert pbh.roundp(12345.6789, format='English') == 12300.0
 
+def test_roundp_format_sci():
     """Test rounding a float with format='sci'"""
     assert pbh.roundp(0.000123, format='sci') == '1.20e-04'
 
