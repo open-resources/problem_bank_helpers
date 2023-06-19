@@ -168,6 +168,9 @@ def test_roundsig(test_input, expected_output):
 def test_num_as_str(num, digits_after_decimal, expected_result):
     assert pbh.num_as_str(num, digits_after_decimal) == expected_result
 
+def test_num_as_str_default_dp():
+    """test default decimal places"""
+    assert pbh.num_as_str(3.14159) == '3.14'
 
 def test_num_as_str_invalid_args_kwargs():
     with pytest.raises(TypeError):
@@ -207,20 +210,26 @@ def test_roundstr():
     """Test passing a string as the argument"""
     assert pbh.round_str('Hello') == 'Hello'
 
+def test_roundstr_default():
     """Test rounding a float without specifying sigfigs or format"""
     assert pbh.round_str(123.456) == '123'
 
+def test_roundstr_overridden_sigfig_setting():
     """Test rounding a float with specified sigfigs"""
     assert pbh.round_str(123.456, sigfigs=2) == 120.0
 
+def test_roundstr_with_format_english():
     """Test rounding a float with specified format='English'"""
     assert pbh.round_str(12345.6789, format='English') == 12300.0
 
+def test_roundstr_with_format_sci():
     """Test rounding a float with specified format='sci'"""
     assert pbh.round_str(0.000123, format='sci') == '1.20e-04'
 
+def test_roundstr_with_sigfig_std_format():
     """Test rounding a float with specified sigfigs and format='std'"""
     assert pbh.round_str(0.123, sigfigs=3, format='std') == 0.120
 
+def test_roundstr_with_decimal_sci_format():
     """Test rounding an integer with specified decimals and format='sci'"""
     assert pbh.round_str(987, decimals=2, format='sci') == '9.87e+02'
