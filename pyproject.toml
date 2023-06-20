@@ -10,7 +10,7 @@ homepage = "https://github.com/open-resources/problem_bank_helpers"
 repository = "https://github.com/open-resources/problem_bank_helpers"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 sigfig = "^1.1.9"
 numpy = "^1.20.3"
 
