@@ -152,6 +152,7 @@ def roundp(*args,**kwargs):
         z = kw['decimals']
     else:
         z = 3 # Default sig figs
+        kwargs['sigfigs'] = z
                         
     num_str = num_str + str(0)*z*2
                 

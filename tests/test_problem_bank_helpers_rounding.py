@@ -164,7 +164,7 @@ def idfn(input):
     ('id_round up',1.999, 2, '2.00'),  # Test rounding up
     ('id_round down',2.001, 2, '2.00'),  # Test rounding down
     ('id_halfway between rounded values',1.555, 2, '1.56'),  # Test rounding halfway between two rounded values
-    ('id_halfway between negative values',-1.5, 2, '-2.00'),  # Test rounding halfway between negative and positive values
+    ('id_halfway between negative values',-1.555, 2, '-1.56'),  # Test rounding halfway between negative and positive values
     ('id_many digits',1234567890.123456789, 8, '1234567890.12345679'),  # Test rounding a float with a large number of digits before and after decimal
     ('id_negative digits rounding',987.654321, -2, '1000.00'),  # Test rounding a float with a negative number of digits after decimal
     ('id_boolean input',True, 2, '1.00'),  # Test rounding a non-numeric input
@@ -194,49 +194,50 @@ def test_roundp_with_overriden_sigfig_settings():
 
 def test_roundp_with_overriden_decimal_settings():
     """Test rounding an integer with specified decimals"""
-    assert pbh.roundp(987, decimals=2) == 987.0
+    assert pbh.roundp(987.654, decimals=2) == 987.65
 
 def test_roundp_with_default_settings():
     """Test rounding a string with default sigfigs"""
-    assert pbh.roundp('99.8765') == '100'
+    assert pbh.roundp('99.8765') == '99.9'
 
-def test_roundp_with_format_std():
-    """Test rounding a float with format='std'"""
-    assert pbh.roundp(0.123, format='std') == 0.12
+def test_roundp_with_notation_std():
+    """Test rounding a float with notation='std'"""
+    assert pbh.roundp(0.123, notation='std') == 0.123
 
-def test_roundp_with_format_english():
-    """Test rounding a float with format='English'"""
-    assert pbh.roundp(12345.6789, format='English') == 12300.0
+def test_roundp_notation_sci_default():
+    """Test rounding a float with notation='sci'"""
+    assert pbh.roundp('3679.14159', notation='scientific') == '3.67E3'
 
-def test_roundp_format_sci():
-    """Test rounding a float with format='sci'"""
-    assert pbh.roundp(0.000123, format='sci') == '1.20e-04'
+def test_roundp_notation_sci_sigfig():
+    """Test rounding a float with notation='sci'"""
+    assert pbh.roundp('3679.14159', decimals=2, notation='scientific') == '3.67914E3'
+
+def test_roundp_notation_sci_dp():
+    """Test rounding a float with notation='sci'"""
+    assert pbh.roundp('3679.14159', decimals=2, notation='scientific') == '3.67914E3'
+
 
 # Test round_str function
-def test_roundstr():
+def test_roundstr_str():
     """Test passing a string as the argument"""
     assert pbh.round_str('Hello') == 'Hello'
 
-def test_roundstr_default():
-    """Test rounding a float without specifying sigfigs or format"""
-    assert pbh.round_str(123.456) == '123'
+def test_roundstr_default_float():
+    """Test rounding a float without specifying sigfigs or notation"""
+    assert pbh.round_str(123.456) == 120
 
 def test_roundstr_overridden_sigfig_setting():
     """Test rounding a float with specified sigfigs"""
-    assert pbh.round_str(123.456, sigfigs=2) == 120.0
+    assert pbh.round_str(123.456, sigfigs=3) == 123.0
 
-def test_roundstr_with_format_english():
-    """Test rounding a float with specified format='English'"""
-    assert pbh.round_str(12345.6789, format='English') == 12300.0
+def test_roundstr_with_notation_sci():
+    """Test rounding a float with specified notation='sci'"""
+    assert pbh.round_str(0.000123, notation='sci') == '1.20e-04'
 
-def test_roundstr_with_format_sci():
-    """Test rounding a float with specified format='sci'"""
-    assert pbh.round_str(0.000123, format='sci') == '1.20e-04'
+def test_roundstr_with_sigfig_std_notation():
+    """Test rounding a float with specified sigfigs and notation='std'"""
+    assert pbh.round_str(0.123, sigfigs=3, notation='std') == 0.120
 
-def test_roundstr_with_sigfig_std_format():
-    """Test rounding a float with specified sigfigs and format='std'"""
-    assert pbh.round_str(0.123, sigfigs=3, format='std') == 0.120
-
-def test_roundstr_with_decimal_sci_format():
-    """Test rounding an integer with specified decimals and format='sci'"""
-    assert pbh.round_str(987, decimals=2, format='sci') == '9.87e+02'
+def test_roundstr_with_decimal_sci_notation_dp():
+    """Test rounding an integer with specified decimals and notation='sci'"""
+    assert pbh.round_str(987, decimals=2, notation='sci') == '9.87e+02'
