@@ -102,6 +102,7 @@ def variables():
     group_names
 )
 def test_sigfigs(test_group, variables):
+    """test many inputs for sigfig calculation"""
     for i, test_input in enumerate(variables[test_group]):
         test_input = str(test_input)
         if test_group == "sf":
@@ -125,7 +126,8 @@ def test_sigfigs(test_group, variables):
         else:
             pytest.fail(f"test group is not defined (got: '{test_group}')")
         assert (pbh.sigfigs(test_input) == correct_sigfigs), f"input: {test_input}"
-def test_sigfigsfail():
+
+def test_sigfigs_floatinput_fail():
     with pytest.raises(Exception):
         pbh.sigfigs(float(1))
 
