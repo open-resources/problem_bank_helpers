@@ -48,7 +48,7 @@ def test_load_csv(file_path):
 
 
 def test_empty_csv():
-    # Test loading an empty CSV file
+    # ensure loading an empty csv fails
     file_path = "data/empty.csv"
 
     # Create an empty CSV file
