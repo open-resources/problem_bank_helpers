@@ -8,11 +8,13 @@ readme = "README.md"
 documentation = "https://problem_bank_helpers.readthedocs.io/en/latest/"
 homepage = "https://github.com/open-resources/problem_bank_helpers"
 repository = "https://github.com/open-resources/problem_bank_helpers"
+include = [{ path = "data/", format = ["sdist", "wheel"]}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 sigfig = "^1.1.9"
 numpy = "^1.20.3"
+pandas = "^2.0"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "^4.0.2"
