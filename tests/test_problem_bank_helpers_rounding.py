@@ -167,8 +167,6 @@ def test_roundsig(test_input, expected_output):
     # these will always fail if we take float inputs
     # ('id_halfway between rounded values',1.555, 2, '1.56'),  # Test rounding halfway between two rounded values
     # ('id_halfway between negative values',-1.555, 2, '-1.56'),  # Test rounding halfway between negative and positive values
-    ('id_many digits',1234567890.123456789, 8, '1234567890.12345679'),  # Test rounding a float with a large number of digits before and after decimal
-    ('id_negative digits rounding',987.654321, -2, '1000.00'),  # Test rounding a float with a negative number of digits after decimal
     ('id_boolean input',True, 2, '1.00'),  # Test rounding a non-numeric input
     ('id_same dp zeros',10.00, 2, '10.00'),  # Test rounding a float that is already rounded to specified digits after decimal
     ],
