@@ -160,7 +160,7 @@ def roundp(*args,**kwargs):
         
     # Switch back to the original format if it was a float
     if isinstance(a[0],float):
-        return float(result) # Note, sig figs will not be carried through if this is a float
+        return float(result.replace(",", "")) # Note, sig figs will not be carried through if this is a float
     elif isinstance(a[0],str):
         return result
     elif isinstance(a[0],int):
