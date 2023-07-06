@@ -5,16 +5,34 @@ from collections import defaultdict
 import numpy as np
 import sigfig
 import pandas as pd
-import os
+import importlib.resources
 
 ## Load data and dictionaries
-animals = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/animals.csv")["Animals"].tolist()
-names = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/names.csv")["Names"].tolist()
-jumpers = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/jumpers.csv")["Jumpers"].tolist()
-vehicles = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/vehicles.csv")["Vehicles"].tolist()
-manual_vehicles = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/manual_vehicles.csv")["Manual Vehicles"].tolist()
-metals = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/metals.csv")["Metal"].tolist()
-T_c = pd.read_csv("https://raw.githubusercontent.com/open-resources/problem_bank_helpers/main/data/metals.csv")["Temp Coefficient"].tolist()
+
+## Better way of loading data and dictionaries
+# Based on this Stack Overflow post: https://stackoverflow.com/questions/65397082/using-resources-module-to-import-data-files
+
+with importlib.resources.open_text("problem_bank_helpers.data", "animals.csv") as file:
+    animals = pd.read_csv(file)["Animals"].tolist()
+
+with importlib.resources.open_text("problem_bank_helpers.data", "names.csv") as file:
+    names = pd.read_csv(file)["Names"].tolist()
+
+with importlib.resources.open_text("problem_bank_helpers.data", "jumpers.csv") as file:
+    jumpers = pd.read_csv(file)["Jumpers"].tolist()
+
+with importlib.resources.open_text("problem_bank_helpers.data", "vehicles.csv") as file:
+    vehicles = pd.read_csv(file)["Vehicles"].tolist()
+
+with importlib.resources.open_text("problem_bank_helpers.data", "manual_vehicles.csv") as file:
+    manual_vehicles = pd.read_csv(file)["Manual Vehicles"].tolist()
+
+with importlib.resources.open_text("problem_bank_helpers.data", "metals.csv") as file:
+    metals = pd.read_csv(file)["Metal"].tolist()
+
+with importlib.resources.open_text("problem_bank_helpers.data", "metals.csv") as file:
+    T_c = pd.read_csv(file)["Temp Coefficient"].tolist()
+
 ## End Load data
 
 def create_data2():
