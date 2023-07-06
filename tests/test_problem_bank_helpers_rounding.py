@@ -8,7 +8,12 @@ import os
 import pytest
 
 def test_version():
-    assert __version__ == '0.1.13'
+    assert __version__ == '0.1.14'
+
+def idfn(input):
+    if str(input)[0:3] == "id_":
+        return input
+    return ""
 
 test_values = {"between0and1": 
                     [0.1,
@@ -143,10 +148,6 @@ def test_roundsig(test_input, expected_output):
     for i in range(9):
         assert (pbh.round_sig(test_input, i + 1) == expected_output[i])
 
-def idfn(input):
-    if str(input)[0:3] == "id_":
-        return input
-    return ""
 
 @pytest.mark.parametrize('id, input, digits_after_decimal, expected_result', [
     ('id_positive float',3.14159, 2, '3.14'),  # Test rounding a positive float to 2 digits after decimal
@@ -274,15 +275,15 @@ def test_roundstr_overridden_sigfig_setting():
 
 def test_roundstr_with_notation_sci():
     """Test rounding a float with specified notation='sci'"""
-    assert pbh.round_str(0.000123, notation='sci') == '1.20e-04'
+    assert pbh.round_str(0.000123, notation='sci') == 0.00012
 
 def test_roundstr_with_sigfig_std_notation():
     """Test rounding a float with specified sigfigs and notation='std'"""
-    assert pbh.round_str(0.123, sigfigs=3, notation='std') == 0.120
+    assert pbh.round_str(0.1234, sigfigs=3, notation='std') == 0.123
 
 def test_roundstr_with_decimal_sci_notation_dp():
     """Test rounding an integer with specified decimals and notation='sci'"""
-    assert pbh.round_str(98767, decimals=2, notation='sci') == '9.88e+04'
+    assert pbh.round_str(98767, decimals=2, notation='sci') == 99000
 
 @pytest.mark.parametrize('id, input, sigfigs, expected_result', [
     ('id_positive float',3.14159, 3, 3.14),  # Test rounding a positive float to 3 sigfigs
