@@ -164,7 +164,7 @@ def roundp(*args,**kwargs):
     elif isinstance(a[0],str):
         return result
     elif isinstance(a[0],int):
-        return int(float(result).replace(",", ""))
+        return int(float(result.replace(",", "")))
     else:
         return sigfig.round(*args,**kwargs)
 
