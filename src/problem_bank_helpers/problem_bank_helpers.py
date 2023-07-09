@@ -42,7 +42,8 @@ def create_data2():
 
 def sigfigs(x):
     '''Returns the number of significant digits in a number. This takes into account
-       strings formatted in 1.23e+3 format and even strings such as 123.450'''
+       strings formatted in 1.23e+3 format and even strings such as 123.450 .
+       This has a limit of 16 sigfigs, which can be increased but doesn't seem practical'''
     # if x is negative, remove the negative sign from the string.
     if float(x) < 0:
         x = x[1:]
@@ -54,8 +55,8 @@ def sigfigs(x):
         return len( myStr[0] ) - 1 # to compenstate for the decimal point
     else:
         # put it in e format and return the result of that
-        ### NOTE: because of the 8 below, it may do crazy things when it parses 9 sigfigs
-        n = ('%.*e' %(8, float(x))).split('e')
+        ### NOTE: because of the 15 below, it may do crazy things when it parses 16 sigfigs
+        n = ('%.*e' %(15, float(x))).split('e')
         # remove and count the number of removed user added zeroes. (these are sig figs)
         if '.' in x:
             s = x.replace('.', '')
