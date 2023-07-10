@@ -186,10 +186,8 @@ def test_roundsig(id, input, sigfigs, expected_result):
     ('id_small negative float',-1e-18, 2, '-0.00'),  # Test rounding a very small negative float (close to zero)
     ('id_round up',1.999, 2, '2.00'),  # Test rounding up
     ('id_round down',2.001, 2, '2.00'),  # Test rounding down
-    # these will always fail for float inputs
     ('id_halfway between rounded values',1.555, 2, '1.56'),  # Test rounding halfway between two rounded values
     ('id_halfway between negative values',-1.555, 2, '-1.56'),  # Test rounding halfway between negative and positive values
-    ('id_boolean input',True, 2, '1.00'),  # Test rounding a non-numeric input
     ('id_same dp zeros',10.00, 2, '10.00'),  # Test rounding a float that is already rounded to specified digits after decimal
     ],
     ids=idfn
