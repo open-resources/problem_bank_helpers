@@ -6,7 +6,7 @@ import numpy as np
 import sigfig
 import pandas as pd
 import importlib.resources
-
+from decimal import Decimal, getcontext, ROUND_HALF_UP
 ## Load data and dictionaries
 
 ## Better way of loading data and dictionaries
@@ -79,7 +79,9 @@ def round_sig(x, sig):
         y = 0
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
-    return round(x, y)
+    # avoid precision loss with floats 
+    x = Decimal(repr(x))
+    return float(round(x, y))
 
 # def round_sig(x, sig_figs = 3):
 #     """A function that rounds to specific significant digits. Original from SO: https://stackoverflow.com/a/3413529/2217577; adapted by Jake Bobowski
@@ -228,7 +230,7 @@ def num_as_str(num, digits_after_decimal = 2):
     elif type(num) == dict:
         return num
     else:
-        from decimal import Decimal, getcontext, ROUND_HALF_UP
+        
 
         round_context = getcontext()
         round_context.rounding = ROUND_HALF_UP
