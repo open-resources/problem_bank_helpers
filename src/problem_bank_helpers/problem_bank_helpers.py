@@ -310,7 +310,7 @@ def base64_encode_string(string):
     return base64.b64encode(string.encode("utf-8")).decode("utf-8")
 
 def base64_decode_file(file):
-    """Deode a base64 string which is a file from prairielearn into a useable string
+    """Decode a base64 string which is a file from prairielearn into a useable string
     """
     # symetrical to base64_encode_string
     return base64.b64decode(to_decode.encode("utf-8")).decode("utf-8")
