@@ -30,11 +30,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        # Minimum supported; Maybe add in some newer version to test things won't break if used on newer versions of python?
-        python_version: ["3.8"] #, "3.x"] 
     concurrency:
-      group: tests-${{ github.ref }}-${{ matrix.python_version }}
+      group: tests-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
@@ -42,10 +39,10 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python -
           echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-      - name: Set up Python ${{ matrix.python_version }}
-        uses: actions/setup-python@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python_version }}
+          python-version: "3.10"
           cache: poetry
       - name: Install dependencies
         run: |
