@@ -175,8 +175,18 @@ def roundp(*args,**kwargs):
     else:
         z = 3 # Default sig figs
         kwargs['sigfigs'] = z
-                        
-    num_str = num_str + str(0)*z*2
+
+    
+
+    # Handle big and small numbers carefully
+    if abs(float(num_str)) < 1e-4 or abs(float(num_str)) > 1e15:
+        power = int(abs(float(num_str))).as_integer_ratio()[1].bit_length() - 1
+        if power < 0:
+            power = 0
+        num_str = format(float(num_str), f".{power}e")
+        kwargs['notation'] = 'sci'
+    else:
+        num_str = num_str + str(0)*z*2
                 
     result = sigfig.round(num_str,**kwargs)
         

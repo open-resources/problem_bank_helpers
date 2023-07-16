@@ -261,10 +261,10 @@ def test_roundp_notation_sci_dp():
     ('id_same dp',9.99, 3, 9.99),  # Test rounding a float that is already correct
     ('id_more dp',2.555, 4, 2.5550),  # Test rounding a float with fewer digits after decimal than specified
     ('id_to fewer dp',1.23456789, 7, 1.234568),  # Test rounding a float with more digits after decimal than specified
-    ('id_large positive float',1e18, 1, 1e18),  # Test rounding a very large positive float
-    ('id_small positive float',1e-18, 1, 1e-18),  # Test rounding a very small positive float (close to zero)
-    ('id_large negative float',-1e18, 1, -1e18),  # Test rounding a very large negative float
-    ('id_small negative float',-1e-18, 1, -1e-18),  # Test rounding a very small negative float (close to zero)
+    ('id_large positive float',1e30, 1, 1e30),  # Test rounding a very large positive float
+    ('id_small positive float',1e-30, 1, 1e-30),  # Test rounding a very small positive float (close to zero)
+    ('id_large negative float',-1e30, 1, -1e30),  # Test rounding a very large negative float
+    ('id_small negative float',-1e-30, 1, -1e-30),  # Test rounding a very small negative float (close to zero)
     ('id_round up',1.999, 3, 2.00),  # Test rounding up
     ('id_round down',2.001, 3, 2.00),  # Test rounding down
     ('id_halfway between rounded values',1.555, 3, 1.56),  # Test rounding halfway between two rounded values
@@ -312,10 +312,10 @@ def test_roundstr_with_decimal_sci_notation_dp():
     ('id_same dp',9.99, 3, 9.99),  # Test rounding a float that is already correct
     ('id_more dp',2.555, 4, 2.5550),  # Test rounding a float with fewer digits after decimal than specified
     ('id_to fewer dp',1.23456789, 7, 1.234568),  # Test rounding a float with more digits after decimal than specified
-    ('id_large positive float',1e18, 1, 1e18),  # Test rounding a very large positive float
-    ('id_small positive float',1e-18, 1, 1e-18),  # Test rounding a very small positive float (close to zero)
-    ('id_large negative float',-1e18, 1, -1e18),  # Test rounding a very large negative float
-    ('id_small negative float',-1e-18, 1, -1e-18),  # Test rounding a very small negative float (close to zero)
+    ('id_large positive float',1e30, 1, 1e30),  # Test rounding a very large positive float
+    ('id_small positive float',1e-30, 1, 1e-30),  # Test rounding a very small positive float (close to zero)
+    ('id_large negative float',-1e30, 1, -1e30),  # Test rounding a very large negative float
+    ('id_small negative float',-1e-30, 1, -1e-30),  # Test rounding a very small negative float (close to zero)
     ('id_round up',1.999, 3, 2.00),  # Test rounding up
     ('id_round down',2.001, 3, 2.00),  # Test rounding down
     ('id_halfway between rounded values',1.555, 3, 1.56),  # Test rounding halfway between two rounded values
