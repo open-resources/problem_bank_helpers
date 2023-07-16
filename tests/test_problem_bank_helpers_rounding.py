@@ -91,7 +91,6 @@ test_values = {"between0and1":
                     "11111111111",
                     "111111111111"
                 ]
-                # TODO: implement eFormat for sigfigs() 
                 , "eFormat":[
                     "1e10",
                     "1.1e10",
@@ -171,6 +170,7 @@ def test_roundsig(id, input, sigfigs, expected_result):
     assert (pbh.round_sig(input, sigfigs) == expected_result)
 
 
+#test num_as_str function
 @pytest.mark.parametrize('id, input, digits_after_decimal, expected_result', [
     ('id_positive float',3.14159, 2, '3.14'),  # Test rounding a positive float to 2 digits after decimal
     ('id_negative float',-2.71828, 2, '-2.72'),  # Test rounding a negative float to 2 digits after decimal
