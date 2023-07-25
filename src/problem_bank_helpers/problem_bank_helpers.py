@@ -6,6 +6,7 @@ import numpy as np
 import sigfig
 import pandas as pd
 import importlib.resources
+import re
 
 ## Load data and dictionaries
 
@@ -301,3 +302,32 @@ def ErrorCheck(subVariable, Variable, LaTeXstr, tolerance):
             return None
     else:
         return None
+
+
+def backticks_to_code_tags(data):
+    """
+    Converts backticks to <code> tags, and code fences to <pl-code> tags for a filled PrairieLearn question data dictionary.
+
+    Args:
+        html (str): The HTML to convert
+    """
+    params = data["params"]
+    for param, param_data in params.items():
+        if not param.startswith("part"):
+            continue
+        for answer, answer_data in param_data.items():
+            if any(opt in answer for opt in {"ans", "statement", "option"}):
+                if isinstance(value := answer_data["value"], str):
+                    value = re.sub(
+                        r"```(?P<language>\w+)?(?(language)(\{(?P<highlighting>[\d,-]*)\})?|)(?P<Code>[^`]+)```",
+                        r'<pl-code language="\g<language>" highlight-lines="\g<highlighting>">\g<Code></pl-code>',
+                        value,
+                        flags=re.MULTILINE,
+                    )
+                    value = value.replace(' language=""', "")  # Remove empty language attributes
+                    value = value.replace(
+                        ' highlight-lines=""', ""
+                    )  # Remove empty highlight-lines attributes
+                    value = re.sub(r"(?<!\\)`(?P<Code>[^`]+)`", r"<code>\g<Code></code>", value)
+                    value = value.replace("\\`", "`")  # Replace escaped backticks
+                    data["params"][param][answer]["value"] = value
