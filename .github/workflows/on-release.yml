@@ -38,7 +38,9 @@ jobs:
           cache: 'pip'
       - name: Update pbh version in serverFilesCourse
         run: |
-          rm -rf serverFilesCourse/problem_bank_* # cleanup/remove old versions
+          rm -rf serverFilesCourse/problem_bank_helpers serverFilesCourse/problem_bank_helpers-*.dist-info
+          rm -rf serverFilesCourse/sigfig serverFilesCourse/sigfig-*.dist-info
+          rm -rf serverFilesCourse/sortedcontainers sortedcontainers-*.dist-info
           pip install problem_bank_helpers sigfig sortedcontainers --upgrade --no-deps --target serverFilesCourse
       - name: Commit and push updated serverFilesCourse
         run: |
