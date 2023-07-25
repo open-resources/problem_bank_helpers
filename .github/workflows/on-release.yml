@@ -36,14 +36,14 @@ jobs:
           python-version: '3.10'
           # saves pip cache between runs, in case a run is ever finished before some runs are started and it can be reused somehow
           cache: 'pip'
-      - name: Update PBS version in serverFilesCourse
+      - name: Update pbh version in serverFilesCourse
         run: |
           rm -rf serverFilesCourse/problem_bank_* # cleanup/remove old versions
-          pip install --upgrade problem_bank_helpers --target serverFilesCourse
+          pip install problem_bank_helpers sigfig sortedcontainers --upgrade --no-deps --target serverFilesCourse
       - name: Commit and push updated serverFilesCourse
         run: |
           git config --global user.name 'fmoosvi'
           git config --global user.email 'firas.moosvi@ubc.ca'
           git add serverFilesCourse
-          git commit -am "Update problem_bank_scripts to ${{ needs.get-version.outputs.ver }}"
+          git commit -am "Automatic GH Action to update problem_bank_helpers to ${{ needs.get-version.outputs.ver }}"
           git push
