@@ -15,7 +15,7 @@ files = sorted(
     [
         file.name
         for file in pathlib.Path(
-            "data/"
+            "src/problem_bank_helpers/data/"
         ).iterdir()
     ]
 )
