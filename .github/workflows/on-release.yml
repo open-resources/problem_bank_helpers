@@ -1,4 +1,4 @@
-name: Push Updated Problem Bank Scripts to Dependent Repos
+name: Push Updated Problem Bank Helpers to Dependent Repos
 
 on: 
   release:
