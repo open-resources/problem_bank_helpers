@@ -55,7 +55,7 @@ def sigfigs(x):
         # return the length of the numbers before the 'e'
         myStr = x.split('e')
         
-        return len( myStr[0] ) - (1 if '.' in x else 0) # to compenstate for the decimal point
+        return len( myStr[0] ) - (1 if '.' in x else 0) # to compensate for the decimal point
     else:
         # put it in e format and return the result of that
         ### NOTE: because of the 15 below, it may do crazy things when it parses 16 sigfigs
@@ -109,7 +109,7 @@ def sigFigCheck(subVariable, LaTeXstr, unitString):
             return None
             
             
-# An error-checking function disigned to give hints if the submitted answer is:
+# An error-checking function designed to give hints if the submitted answer is:
 # (1) correct except for and overall sign or...
 # (2) the answer is right expect for the power of 10 multiplier or...
 # (3) answer has both a sign and exponent error.            
