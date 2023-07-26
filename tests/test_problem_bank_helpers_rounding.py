@@ -2,9 +2,6 @@ from src.problem_bank_helpers import __version__
 from src.problem_bank_helpers import problem_bank_helpers as pbh
 import pytest
 
-def test_version():
-    assert __version__ == '0.1.14'
-
 def idfn(input):
     if str(input)[0:3] == "id_":
         return input

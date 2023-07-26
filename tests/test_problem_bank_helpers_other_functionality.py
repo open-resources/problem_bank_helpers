@@ -3,9 +3,6 @@ import pandas as pd
 import pytest
 import pathlib
 
-def test_version():
-    assert __version__ == '0.1.14'
-
 files = sorted(
     [
         file.name
