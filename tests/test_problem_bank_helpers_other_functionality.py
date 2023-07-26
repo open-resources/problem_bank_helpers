@@ -1,12 +1,7 @@
 from src.problem_bank_helpers import __version__
-from src.problem_bank_helpers import problem_bank_helpers as pbh
-from collections import defaultdict
-import numpy as np
 import pandas as pd
-import os
 import pytest
 import pathlib
-import csv
 
 def test_version():
     assert __version__ == '0.1.14'
