@@ -307,6 +307,7 @@ def ErrorCheck(subVariable, Variable, LaTeXstr, tolerance):
 def backticks_to_code_tags(data):
     """
     Converts backticks to <code> tags, and code fences to <pl-code> tags for a filled PrairieLearn question data dictionary.
+    Note: this only makes replacements multiple choice (and other similar question) answer options.
 
     Args:
         html (str): The HTML to convert
