@@ -20,7 +20,7 @@ files = sorted(
     ]
 )
 
-files = [("data/" + f) for f in files if f != 'empty.csv']
+files = [("src/problem_bank_helpers/data/" + f) for f in files if f != 'empty.csv']
 
 
 @pytest.mark.parametrize("file_path", files)
