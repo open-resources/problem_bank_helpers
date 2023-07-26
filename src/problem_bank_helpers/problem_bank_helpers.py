@@ -193,14 +193,18 @@ def roundp(*args,**kwargs):
         num_str = num_str + str(0)*z*2
     
     # Add trailing zeroes if necessary (WIP)
-    #if z > sigfigs(num_str):
-    #    split_string = num_str.split("e")
-    #    if "." not in split_string[0]:
-    #        split_string[0] = split_string[0] + "."
-    #    split_string[0] = split_string[0] + ("0"*(z - sigfigs(num_str)))
-    #    num_str = "e".join(split_string)
-                
-    result = sigfig.round(num_str,**kwargs)
+    if z > sigfigs(num_str):
+        split_string = num_str.split("e")
+        if "." not in split_string[0]:
+            split_string[0] = split_string[0] + "."
+        split_string[0] = split_string[0] + ("0"*(z - sigfigs(num_str)))
+        num_str = "e".join(split_string)
+    
+    if abs(float(num_str)) == 0:
+        result = num_str
+        print("num is zero: " + result + "\n")
+    else:            
+        result = sigfig.round(num_str,**kwargs)
         
     # Switch back to the original format if it was a float
     if isinstance(a[0],float):
