@@ -10,6 +10,10 @@ import importlib.resources
 from decimal import Decimal, getcontext, ROUND_HALF_UP
 import re
 
+# Set rounding context
+round_context = getcontext()
+round_context.rounding = ROUND_HALF_UP
+
 ## Load data and dictionaries
 
 ## Better way of loading data and dictionaries
@@ -177,7 +181,6 @@ def roundp(*args,**kwargs):
     else:
         z = 3 # Default sig figs
         kwargs['sigfigs'] = z
-    # Add trailing zeroes if necessary
 
     # Handle big and small numbers carefully
     if abs(float(num_str)) < 1e-4 or abs(float(num_str)) > 1e15:
@@ -188,6 +191,14 @@ def roundp(*args,**kwargs):
         kwargs['notation'] = 'sci'
     else:
         num_str = num_str + str(0)*z*2
+    
+    # Add trailing zeroes if necessary (WIP)
+    #if z > sigfigs(num_str):
+    #    split_string = num_str.split("e")
+    #    if "." not in split_string[0]:
+    #        split_string[0] = split_string[0] + "."
+    #    split_string[0] = split_string[0] + ("0"*(z - sigfigs(num_str)))
+    #    num_str = "e".join(split_string)
                 
     result = sigfig.round(num_str,**kwargs)
         
@@ -241,11 +252,6 @@ def num_as_str(num, digits_after_decimal = 2):
     elif type(num) == dict:
         return num
     else:
-        
-
-        round_context = getcontext()
-        round_context.rounding = ROUND_HALF_UP
-
         tmp = Decimal(str(num)).quantize(Decimal('1.'+'0'*digits_after_decimal))
         
         return str(tmp)
