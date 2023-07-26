@@ -6,6 +6,7 @@ import numpy as np
 import sigfig
 import pandas as pd
 import importlib.resources
+from decimal import Decimal, getcontext, ROUND_HALF_UP
 import re
 
 ## Load data and dictionaries
@@ -43,7 +44,8 @@ def create_data2():
 
 def sigfigs(x):
     '''Returns the number of significant digits in a number. This takes into account
-       strings formatted in 1.23e+3 format and even strings such as 123.450'''
+       strings formatted in 1.23e+3 format and even strings such as 123.450 .
+       This has a limit of 16 sigfigs, which can be increased but doesn't seem practical'''
     # if x is negative, remove the negative sign from the string.
     if float(x) < 0:
         x = x[1:]
@@ -52,11 +54,12 @@ def sigfigs(x):
     if ('e' in x):
         # return the length of the numbers before the 'e'
         myStr = x.split('e')
-        return len( myStr[0] ) - 1 # to compenstate for the decimal point
+        
+        return len( myStr[0] ) - (1 if '.' in x else 0) # to compensate for the decimal point
     else:
         # put it in e format and return the result of that
-        ### NOTE: because of the 8 below, it may do crazy things when it parses 9 sigfigs
-        n = ('%.*e' %(8, float(x))).split('e')
+        ### NOTE: because of the 15 below, it may do crazy things when it parses 16 sigfigs
+        n = f'{float(x):.15e}'.split('e')
         # remove and count the number of removed user added zeroes. (these are sig figs)
         if '.' in x:
             s = x.replace('.', '')
@@ -78,7 +81,9 @@ def round_sig(x, sig):
         y = 0
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
-    return round(x, y)
+    # avoid precision loss with floats 
+    x = Decimal(repr(x))
+    return float(round(x, y))
 
 # def round_sig(x, sig_figs = 3):
 #     """A function that rounds to specific significant digits. Original from SO: https://stackoverflow.com/a/3413529/2217577; adapted by Jake Bobowski
@@ -104,7 +109,7 @@ def sigFigCheck(subVariable, LaTeXstr, unitString):
             return None
             
             
-# An error-checking function disigned to give hints if the submitted answer is:
+# An error-checking function designed to give hints if the submitted answer is:
 # (1) correct except for and overall sign or...
 # (2) the answer is right expect for the power of 10 multiplier or...
 # (3) answer has both a sign and exponent error.            
@@ -171,18 +176,29 @@ def roundp(*args,**kwargs):
         z = kw['decimals']
     else:
         z = 3 # Default sig figs
-                        
-    num_str = num_str + str(0)*z*2
+        kwargs['sigfigs'] = z
+
+    
+
+    # Handle big and small numbers carefully
+    if abs(float(num_str)) < 1e-4 or abs(float(num_str)) > 1e15:
+        power = int(abs(float(num_str))).as_integer_ratio()[1].bit_length() - 1
+        if power < 0:
+            power = 0
+        num_str = format(float(num_str), f".{power}e")
+        kwargs['notation'] = 'sci'
+    else:
+        num_str = num_str + str(0)*z*2
                 
     result = sigfig.round(num_str,**kwargs)
         
     # Switch back to the original format if it was a float
     if isinstance(a[0],float):
-        return float(result) # Note, sig figs will not be carried through if this is a float
+        return float(result.replace(",", "")) # Note, sig figs will not be carried through if this is a float
     elif isinstance(a[0],str):
         return result
     elif isinstance(a[0],int):
-        return int(float(result))
+        return int(float(result.replace(",", "")))
     else:
         return sigfig.round(*args,**kwargs)
 
@@ -226,13 +242,13 @@ def num_as_str(num, digits_after_decimal = 2):
     elif type(num) == dict:
         return num
     else:
-        from decimal import Decimal, getcontext, ROUND_HALF_UP
+        
 
         round_context = getcontext()
         round_context.rounding = ROUND_HALF_UP
 
-        tmp = Decimal(num).quantize(Decimal('1.'+'0'*digits_after_decimal))
-
+        tmp = Decimal(repr(num)).quantize(Decimal('1.'+'0'*digits_after_decimal))
+        
         return str(tmp)
 
 def sign_str(number):
