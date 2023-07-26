@@ -1,6 +1,7 @@
 # Author: Firas Moosvi, Jake Bobowski, others
 # Date: 2021-06-13
 
+import base64
 from collections import defaultdict
 import numpy as np
 import sigfig
@@ -319,7 +320,6 @@ def ErrorCheck(subVariable, Variable, LaTeXstr, tolerance):
     else:
         return None
 
-
 def backticks_to_code_tags(data):
     """
     Converts backticks to <code> tags, and code fences to <pl-code> tags for a filled PrairieLearn question data dictionary.
@@ -348,3 +348,27 @@ def backticks_to_code_tags(data):
                     value = re.sub(r"(?<!\\)`(?P<Code>[^`]+)`", r"<code>\g<Code></code>", value)
                     value = value.replace("\\`", "`")  # Replace escaped backticks
                     data["params"][param][answer]["value"] = value
+
+def base64_encode_string(string):
+    """Encode a string into a base64 representation to act as a file for prarielearn
+    """
+    # Based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/exampleCourse/questions/demo/autograder/python/leadingTrailing/server.py#L9-L11
+    return base64.b64encode(string.encode("utf-8")).decode("utf-8")
+
+def base64_decode_file(file):
+    """Decode a base64 string which is a file from prairielearn into a useable string
+    """
+    # symetrical to base64_encode_string
+    return base64.b64decode(to_decode.encode("utf-8")).decode("utf-8")
+
+def string_to_pl_user_file(string, data):
+    """Encode a string to base64 and add it as the user submitted code file  
+    """
+    # partially based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/apps/prairielearn/elements/pl-file-upload/pl-file-upload.py#L114C1-L119
+    parsed_file [
+        {"name": "user_code.py", "contents": base64_encode_string(answer)}
+    ]        
+    if isinstance(data["submitted_answers"].get("_files", None), list):
+        data["submitted_answers"]["_files"].append(parsed_file)
+    else:
+        data["submitted_answers"]["_files"] = parsed_file
