@@ -296,7 +296,7 @@ def test_roundstr_with_sigfig_std_notation():
 
 def test_roundstr_with_decimal_sci_notation_dp():
     """Test rounding an integer with specified decimals and notation='sci'"""
-    assert pbh.round_str(98767, decimals=2, notation='sci') == 99000
+    assert pbh.round_str(98767.1234, decimals=2, notation='sci') == 98767.12
 
 @pytest.mark.parametrize('id, input, sigfigs, expected_result', [
     ('id_positive float',3.14159, 3, 3.14),  # Test rounding a positive float to 3 sigfigs

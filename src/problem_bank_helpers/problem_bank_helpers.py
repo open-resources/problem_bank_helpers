@@ -10,6 +10,10 @@ import importlib.resources
 from decimal import Decimal, getcontext, ROUND_HALF_UP
 import re
 
+# Set rounding context
+round_context = getcontext()
+round_context.rounding = ROUND_HALF_UP
+
 ## Load data and dictionaries
 
 ## Better way of loading data and dictionaries
@@ -83,7 +87,7 @@ def round_sig(x, sig):
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
     # avoid precision loss with floats 
-    x = Decimal(repr(x))
+    x = Decimal(str(x))
     return float(round(x, y))
 
 # def round_sig(x, sig_figs = 3):
@@ -169,8 +173,7 @@ def roundp(*args,**kwargs):
         
     num_str = str(float(a[0]))
         
-    # Add trailing zeroes if needed
-    
+    # Create default sigfigs if necessary
     if kw.get('sigfigs',None):
         z = kw['sigfigs']
     elif kw.get('decimals', None):
@@ -178,8 +181,6 @@ def roundp(*args,**kwargs):
     else:
         z = 3 # Default sig figs
         kwargs['sigfigs'] = z
-
-    
 
     # Handle big and small numbers carefully
     if abs(float(num_str)) < 1e-4 or abs(float(num_str)) > 1e15:
@@ -190,8 +191,21 @@ def roundp(*args,**kwargs):
         kwargs['notation'] = 'sci'
     else:
         num_str = num_str + str(0)*z*2
-                
-    result = sigfig.round(num_str,**kwargs)
+    
+    # Add trailing zeroes if necessary
+    if z > sigfigs(num_str):
+        split_string = num_str.split("e")
+        if "." not in split_string[0]:
+            split_string[0] = split_string[0] + "."
+        split_string[0] = split_string[0] + ("0"*(z - sigfigs(num_str)))
+        num_str = "e".join(split_string)
+    
+    # sigfig.round doesn't like zero
+    if abs(float(num_str)) == 0:
+        result = num_str
+        print("num is zero: " + result + "\n")
+    else:            
+        result = sigfig.round(num_str,**kwargs)
         
     # Switch back to the original format if it was a float
     if isinstance(a[0],float):
@@ -208,7 +222,7 @@ def round_str(*args,**kwargs):
     if type(args[0]) is str:
         return args[0]
     
-    if 'sigfigs' not in kwargs.keys():
+    if 'sigfigs' not in kwargs.keys() and 'decimals' not in kwargs.keys():
         kwargs['sigfigs'] = 2
     
     if 'format' not in kwargs.keys():
@@ -243,12 +257,7 @@ def num_as_str(num, digits_after_decimal = 2):
     elif type(num) == dict:
         return num
     else:
-        
-
-        round_context = getcontext()
-        round_context.rounding = ROUND_HALF_UP
-
-        tmp = Decimal(repr(num)).quantize(Decimal('1.'+'0'*digits_after_decimal))
+        tmp = Decimal(str(num)).quantize(Decimal('1.'+'0'*digits_after_decimal))
         
         return str(tmp)
 
