@@ -87,8 +87,10 @@ def round_sig(x, sig):
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
     # avoid precision loss with floats 
-    x = Decimal(str(x))
-    return float(round(x, y))
+    decimal_x = round( Decimal(str(x)) , y )
+    
+    return float(decimal_x) if isinstance(x, float) else int(decimal_x)
+
 
 # def round_sig(x, sig_figs = 3):
 #     """A function that rounds to specific significant digits. Original from SO: https://stackoverflow.com/a/3413529/2217577; adapted by Jake Bobowski

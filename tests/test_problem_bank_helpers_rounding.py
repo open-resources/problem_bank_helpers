@@ -133,12 +133,20 @@ def test_sigfigs(test_group, variables):
             pytest.fail(f"test group is not defined (got: '{test_group}')")
         assert (pbh.sigfigs(test_input) == correct_sigfigs), f"input: {test_input}, output: {pbh.sigfigs(test_input)}"
 
-def test_sigfigs_floatinput_fail():
+def test_sigfigs_float_input_fail():
     with pytest.raises(Exception):
         pbh.sigfigs(float(1))
 
 
 # Test round_sig function
+def test_roundsig_int_returns_int():
+    """Test rounding an int with specified sigfigs"""
+    assert type(pbh.roundp(123, 2)) is int
+    
+def test_roundsig_with_float():
+    """Test rounding an int with specified sigfigs"""
+    assert type(pbh.roundp(123.0, 2)) is float
+
 @pytest.mark.parametrize('id, input, sigfigs, expected_result', [
     ('id_positive float',3.14159, 3, 3.14),  # Test rounding a positive float to 3 sigfigs
     ('id_negative float',-2.71828, 3, -2.72),  # Test rounding a negative float to 3 sigfigs
