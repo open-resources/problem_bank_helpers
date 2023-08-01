@@ -141,11 +141,16 @@ def test_sigfigs_float_input_fail():
 # Test round_sig function
 def test_roundsig_int_returns_int():
     """Test rounding an int with specified sigfigs"""
-    assert type(pbh.roundp(123, 2)) is int
+    assert type(pbh.round_sig(123, 2)) is int
     
 def test_roundsig_with_float():
-    """Test rounding an int with specified sigfigs"""
-    assert type(pbh.roundp(123.0, 2)) is float
+    """Test rounding an float with specified sigfigs"""
+    assert type(pbh.round_sig(123.0, 2)) is float
+
+def test_roundsig_with_string_fail():
+    """Test rounding a string with specified sigfigs"""
+    with pytest.raises(Exception):
+        pbh.round_sig("123.0", 2)
 
 @pytest.mark.parametrize('id, input, sigfigs, expected_result', [
     ('id_positive float',3.14159, 3, 3.14),  # Test rounding a positive float to 3 sigfigs
@@ -169,11 +174,25 @@ def test_roundsig_with_float():
     ],
     ids=idfn
 )
-def test_roundsig(id, input, sigfigs, expected_result):
+def test_roundsig_rigorous(id, input, sigfigs, expected_result):
     assert (pbh.round_sig(input, sigfigs) == expected_result)
 
 
 #test num_as_str function
+def test_num_as_str_rigorous(id, input, digits_after_decimal, expected_result):
+    assert pbh.num_as_str(input, digits_after_decimal) == expected_result
+
+def test_num_as_str_default_dp():
+    """test default decimal places"""
+    assert pbh.num_as_str(3.14159) == '3.14'
+
+def test_num_as_str_invalid_args_kwargs():
+    with pytest.raises(TypeError):
+        pbh.num_as_str(123.45, 2, "args")  # Function should not accept *args
+
+    with pytest.raises(TypeError):
+        pbh.num_as_str(123.45, 2, digits_after_decimal=2)  # Function should not accept **kwargs
+
 @pytest.mark.parametrize('id, input, digits_after_decimal, expected_result', [
     ('id_positive float',3.14159, 2, '3.14'),  # Test rounding a positive float to 2 digits after decimal
     ('id_negative float',-2.71828, 2, '-2.72'),  # Test rounding a negative float to 2 digits after decimal
@@ -195,19 +214,6 @@ def test_roundsig(id, input, sigfigs, expected_result):
     ],
     ids=idfn
 )
-def test_num_as_str(id, input, digits_after_decimal, expected_result):
-    assert pbh.num_as_str(input, digits_after_decimal) == expected_result
-
-def test_num_as_str_default_dp():
-    """test default decimal places"""
-    assert pbh.num_as_str(3.14159) == '3.14'
-
-def test_num_as_str_invalid_args_kwargs():
-    with pytest.raises(TypeError):
-        pbh.num_as_str(123.45, 2, "args")  # Function should not accept *args
-
-    with pytest.raises(TypeError):
-        pbh.num_as_str(123.45, 2, digits_after_decimal=2)  # Function should not accept **kwargs
 
 
 # Test roundp function
@@ -277,7 +283,7 @@ def test_roundp_notation_sci_dp():
     ],
     ids=idfn
 )
-def test_roundp_rigorous_sigfig(id, input, sigfigs, expected_result):
+def test_roundp_rigorous(id, input, sigfigs, expected_result):
     assert pbh.roundp(input, sigfigs=sigfigs) == expected_result
 
 
@@ -328,5 +334,5 @@ def test_roundstr_with_decimal_sci_notation_dp():
     ],
     ids=idfn
 )
-def test_roundstr_rigorous_sigfig(id, input, sigfigs, expected_result):
+def test_roundstr_rigorous(id, input, sigfigs, expected_result):
     assert pbh.round_str(input, sigfigs=sigfigs) == expected_result
