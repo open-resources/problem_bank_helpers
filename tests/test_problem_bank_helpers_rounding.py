@@ -179,9 +179,6 @@ def test_roundsig_rigorous(id, input, sigfigs, expected_result):
 
 
 #test num_as_str function
-def test_num_as_str_rigorous(id, input, digits_after_decimal, expected_result):
-    assert pbh.num_as_str(input, digits_after_decimal) == expected_result
-
 def test_num_as_str_default_dp():
     """test default decimal places"""
     assert pbh.num_as_str(3.14159) == '3.14'
@@ -214,6 +211,8 @@ def test_num_as_str_invalid_args_kwargs():
     ],
     ids=idfn
 )
+def test_num_as_str_rigorous(id, input, digits_after_decimal, expected_result):
+    assert pbh.num_as_str(input, digits_after_decimal) == expected_result
 
 
 # Test roundp function
