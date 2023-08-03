@@ -141,11 +141,11 @@ def test_sigfigs_float_input_fail():
 # Test round_sig function
 def test_roundsig_int_returns_int():
     """Test rounding an int with specified sigfigs"""
-    assert type(pbh.round_sig(123, 2)) is int
+    assert isinstance(pbh.round_sig(123, 2), int)
     
 def test_roundsig_with_float():
     """Test rounding an float with specified sigfigs"""
-    assert type(pbh.round_sig(123.0, 2)) is float
+    assert isinstance(pbh.round_sig(123.0, 2), float)
 
 def test_roundsig_with_string_fail():
     """Test rounding a string with specified sigfigs"""

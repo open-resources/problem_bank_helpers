@@ -98,7 +98,7 @@ def round_sig(x, sig):
     # avoid precision loss with floats 
     decimal_x = round( Decimal(str(x)) , y )
     
-    return int(decimal_x) if isinstance(x, int) else float(decimal_x)
+    return type(x)(decimal_x)
 
 
 # def round_sig(x, sig_figs = 3):
