@@ -1,7 +1,9 @@
 from src.problem_bank_helpers import __version__
 import pandas as pd
 import pytest
+import tempfile
 import pathlib
+import os
 
 files = sorted(
     [
@@ -40,15 +42,20 @@ def test_load_csv(file_path):
 
 
 def test_empty_csv():
-    # ensure loading an empty csv fails
-    file_path = "data/empty.csv"
+    try:
+        # Create a temporary empty CSV file
+        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as csvfile:
+            pass
 
-    # Create an empty CSV file
-    with open(file_path, 'w') as csvfile:
-        pass
+        # Call the test_load_csv function with the temporary empty CSV file
+        with pytest.raises(pd.errors.EmptyDataError):
+            test_load_csv(csvfile.name)
 
-    with pytest.raises(pd.errors.EmptyDataError):
-        test_load_csv(file_path)
+    finally:
+        # Clean up the temporary file after the test
+        if csvfile:
+            csvfile.close()
+            os.remove(csvfile.name)
 
 
 @pytest.mark.parametrize("file_path", files)
