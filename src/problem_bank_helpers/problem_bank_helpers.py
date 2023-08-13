@@ -79,16 +79,27 @@ def sigfigs(x):
     return sigfigs('e'.join(n))
     
     
-# A function to rounding a number x keeping sig significant figures. 
 def round_sig(x, sig):
+    """
+    Round a number to a specified number of significant digits.
+
+    Args:
+        x (float or int): The number to be rounded.
+        sig (int): The number of significant digits.
+
+    Returns:
+        float or int: The rounded number retaining the type of the input.
+    """
     from math import log10, floor
     if x == 0:
         y = 0
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
     # avoid precision loss with floats 
-    x = Decimal(str(x))
-    return float(round(x, y))
+    decimal_x = round( Decimal(str(x)) , y )
+    
+    return type(x)(decimal_x)
+
 
 # def round_sig(x, sig_figs = 3):
 #     """A function that rounds to specific significant digits. Original from SO: https://stackoverflow.com/a/3413529/2217577; adapted by Jake Bobowski
