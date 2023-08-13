@@ -374,10 +374,8 @@ def string_to_pl_user_file(string, data):
     """Encode a string to base64 and add it as the user submitted code file  
     """
     # partially based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/apps/prairielearn/elements/pl-file-upload/pl-file-upload.py#L114C1-L119
-    parsed_file [
-        {"name": "user_code.py", "contents": base64_encode_string(answer)}
-    ]        
+    parsed_file = {"name": "user_code.py", "contents": base64_encode_string(answer)}
     if isinstance(data["submitted_answers"].get("_files", None), list):
         data["submitted_answers"]["_files"].append(parsed_file)
     else:
-        data["submitted_answers"]["_files"] = parsed_file
+        data["submitted_answers"]["_files"] = [parsed_file]
