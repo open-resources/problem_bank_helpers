@@ -407,7 +407,7 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         wrap_header_latex (bool, optional): Whether to wrap all header table cells in $ for LaTeX. Defaults to False.
     """
     def wrap(x):
-        return f"${x}$" if wrap_latex else x
+        return f"${x}$" if wrap_nonheader_latex else x
     def wrap_header(x):
         return f"${x}$" if wrap_header_latex else x
 
