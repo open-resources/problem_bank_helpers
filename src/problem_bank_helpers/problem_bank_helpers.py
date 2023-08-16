@@ -391,7 +391,7 @@ def string_to_pl_user_file(string, data):
     else:
         data["submitted_answers"]["_files"] = [parsed_file]
 
-def convert_markdown_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_latex=False):
+def convert_markdown_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_latex=False, wrap_header_latex=False):
     """
     Convert a python table to HTML\n
     Example usage:\n
@@ -404,15 +404,18 @@ def convert_markdown_table(table, width="100%", first_row_is_header=True, first_
         first_row_is_header (bool, optional): Whether the first row is a header. Defaults to True.
         first_col_is_header (bool, optional): Whether the first column is a header. Defaults to True.
         wrap_latex (bool, optional): Whether to wrap all non-header table cells in $ for LaTeX. Defaults to False.
+        wrap_header_latex (bool, optional): Whether to wrap all header table cells in $ for LaTeX. Defaults to False.
     """
     def wrap(x):
         return f"${x}$" if wrap_latex else x
+    def wrap_header(x):
+        return f"${x}$" if wrap_header_latex else x
 
     def choose_el(x, i, j):
         if i == 0 and first_row_is_header:
-            return f'<th>{x}</th>'
+            return f'<th>{wrap_header(x)}</th>'
         elif j == 0 and first_col_is_header:
-            return f'<th>{x}</th>'
+            return f'<th>{wrap_header(x)}</th>'
         else:
             return f'<td>{wrap(x)}</td>'
 
