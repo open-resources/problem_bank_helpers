@@ -395,7 +395,7 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
     """
     Convert a python table to HTML\n
     Example usage:\n
-    server.py: data["params"]["table1"] = pbh.convert_markdown_table([["a", "b", "c"], ["x", "1"]], wrap_latex=True)\n
+    server.py: data["params"]["table1"] = pbh.convert_markdown_table([["a", "b", "c"], ["x", "1"]], wrap_nonheader_latex=True)\n
     markdown: {{{ params.table1 }}}
 
     Args:
