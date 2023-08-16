@@ -403,7 +403,7 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         width (str, optional): The width of the table. Ex. "100%", "500px", etc.
         first_row_is_header (bool, optional): Whether the first row is a header. Defaults to True.
         first_col_is_header (bool, optional): Whether the first column is a header. Defaults to True.
-        wrap_latex (bool, optional): Whether to wrap all non-header table cells in $ for LaTeX. Defaults to False.
+        wrap_nonheader_latex (bool, optional): Whether to wrap all non-header table cells in $ for LaTeX. Defaults to False.
         wrap_header_latex (bool, optional): Whether to wrap all header table cells in $ for LaTeX. Defaults to False.
     """
     def wrap(x):
