@@ -392,6 +392,19 @@ def string_to_pl_user_file(string, data):
         data["submitted_answers"]["_files"] = [parsed_file]
 
 def convert_markdown_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_latex=False):
+    """
+    Convert a python table to HTML\n
+    Example usage:\n
+    server.py: data["params"]["table1"] = pbh.convert_markdown_table([["a", "b", "c"], ["x", "1"]], wrap_latex=True)\n
+    markdown: {{ params.table1 }}
+
+    Args:
+        table (list): A list of lists representing the table
+        width (str, optional): The width of the table. Ex. "100%", "500px", etc.
+        first_row_is_header (bool, optional): Whether the first row is a header. Defaults to True.
+        first_col_is_header (bool, optional): Whether the first column is a header. Defaults to True.
+        wrap_latex (bool, optional): Whether to wrap all non-header table cells in $ for LaTeX. Defaults to False.
+    """
     def wrap(x):
         return f"${x}$" if wrap_latex else x
 
