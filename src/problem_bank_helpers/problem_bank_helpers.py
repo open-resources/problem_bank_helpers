@@ -420,7 +420,7 @@ def convert_markdown_table(table, width="100%", first_row_is_header=True, first_
             return f'<td>{wrap(x)}</td>'
 
 
-    html = f'<table style="{width}">\n'
+    html = f'<table style="width:{width}">\n'
     for i, row in enumerate(table):
         html += "<tr>\n"
         elements = [choose_el(col, i, j) for j, col in enumerate(row)]
