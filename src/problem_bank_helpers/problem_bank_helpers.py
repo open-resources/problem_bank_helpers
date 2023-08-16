@@ -59,7 +59,7 @@ def sigfigs(x):
     if ('e' in x):
         # return the length of the numbers before the 'e'
         myStr = x.split('e')
-        
+
         return len( myStr[0] ) - (1 if '.' in x else 0) # to compensate for the decimal point
     else:
         # put it in e format and return the result of that
@@ -77,8 +77,8 @@ def sigfigs(x):
             n[0] = n[0].rstrip('0')
         #pass it back to the beginning to be parsed
     return sigfigs('e'.join(n))
-    
-    
+
+
 def round_sig(x, sig):
     """
     Round a number to a specified number of significant digits.
@@ -95,9 +95,9 @@ def round_sig(x, sig):
         y = 0
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
-    # avoid precision loss with floats 
+    # avoid precision loss with floats
     decimal_x = round( Decimal(str(x)) , y )
-    
+
     return type(x)(decimal_x)
 
 
@@ -115,20 +115,20 @@ def round_sig(x, sig):
 
 # If the absolute value of the submitted answers are greater than 1e4 or less than 1e-3, write the submitted answers using scientific notation.
 # Write the alternative format only if the submitted answers are not already expressed in scientific notation.
-# Attempt to keep the same number of sig figs that were submitted.    
-def sigFigCheck(subVariable, LaTeXstr, unitString):    
+# Attempt to keep the same number of sig figs that were submitted.
+def sigFigCheck(subVariable, LaTeXstr, unitString):
     if subVariable is not None:
         if (abs(subVariable) < 1e12 and abs(subVariable) > 1e4) or (abs(subVariable) < 1e-3 and abs(subVariable) > 1e-4):
             decStr = "{:." + str(sigfigs(str(subVariable)) - 1) + "e}"
             return("In scientific notation, $" + LaTeXstr + " =$ " + decStr.format(subVariable) + unitString + " was submitted.")
         else:
             return None
-            
-            
+
+
 # An error-checking function designed to give hints if the submitted answer is:
 # (1) correct except for and overall sign or...
 # (2) the answer is right expect for the power of 10 multiplier or...
-# (3) answer has both a sign and exponent error.            
+# (3) answer has both a sign and exponent error.
 def ErrorCheck(errorCheck, subVariable, Variable, LaTeXstr, tolerance):
     import math, copy
     from math import log10, floor
@@ -181,9 +181,9 @@ def roundp(*args,**kwargs):
     """
     a = [item for item in args]
     kw = {item:v for item,v in kwargs.items() if item in ['sigfigs', 'decimals']}
-        
+
     num_str = str(float(a[0]))
-        
+
     # Create default sigfigs if necessary
     if kw.get('sigfigs',None):
         z = kw['sigfigs']
@@ -202,7 +202,7 @@ def roundp(*args,**kwargs):
         kwargs['notation'] = 'sci'
     else:
         num_str = num_str + str(0)*z*2
-    
+
     # Add trailing zeroes if necessary
     if z > sigfigs(num_str):
         split_string = num_str.split("e")
@@ -210,14 +210,14 @@ def roundp(*args,**kwargs):
             split_string[0] = split_string[0] + "."
         split_string[0] = split_string[0] + ("0"*(z - sigfigs(num_str)))
         num_str = "e".join(split_string)
-    
+
     # sigfig.round doesn't like zero
     if abs(float(num_str)) == 0:
         result = num_str
         print("num is zero: " + result + "\n")
-    else:            
+    else:
         result = sigfig.round(num_str,**kwargs)
-        
+
     # Switch back to the original format if it was a float
     if isinstance(a[0],float):
         return float(result.replace(",", "")) # Note, sig figs will not be carried through if this is a float
@@ -229,13 +229,13 @@ def roundp(*args,**kwargs):
         return sigfig.round(*args,**kwargs)
 
 def round_str(*args,**kwargs):
-    
+
     if type(args[0]) is str:
         return args[0]
-    
+
     if 'sigfigs' not in kwargs.keys() and 'decimals' not in kwargs.keys():
         kwargs['sigfigs'] = 2
-    
+
     if 'format' not in kwargs.keys():
         if np.abs(args[0]) < 1:
             return roundp(*args,**kwargs,format='std')
@@ -269,7 +269,7 @@ def num_as_str(num, digits_after_decimal = 2):
         return num
     else:
         tmp = Decimal(str(num)).quantize(Decimal('1.'+'0'*digits_after_decimal))
-        
+
         return str(tmp)
 
 def sign_str(number):
@@ -313,11 +313,11 @@ def automatic_feedback(data,string_rep = None,rtol = None):
 # An error-checking function designed to give hints if the submitted answer is:
 # (1) correct except for and overall sign or...
 # (2) the answer is right expect for the power of 10 multiplier or...
-# (3) answer has both a sign and exponent error.            
+# (3) answer has both a sign and exponent error.
 def ErrorCheck(subVariable, Variable, LaTeXstr, tolerance):
     import math
     from math import log10, floor
-    
+
     if subVariable is not None and subVariable != 0 and Variable != 0:
         if math.copysign(1, subVariable) != math.copysign(1, Variable) and abs((abs(subVariable) - abs(Variable))/abs(Variable)) <= tolerance:
             return("Check the sign of $" + LaTeXstr + "$.")
@@ -382,7 +382,7 @@ def base64_decode_file(file):
     return base64.b64decode(to_decode.encode("utf-8")).decode("utf-8")
 
 def string_to_pl_user_file(string, data):
-    """Encode a string to base64 and add it as the user submitted code file  
+    """Encode a string to base64 and add it as the user submitted code file
     """
     # partially based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/apps/prairielearn/elements/pl-file-upload/pl-file-upload.py#L114C1-L119
     parsed_file = {"name": "user_code.py", "contents": base64_encode_string(answer)}
@@ -390,3 +390,25 @@ def string_to_pl_user_file(string, data):
         data["submitted_answers"]["_files"].append(parsed_file)
     else:
         data["submitted_answers"]["_files"] = [parsed_file]
+
+def convert_markdown_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_latex=False):
+    def wrap(x):
+        return f"${x}$" if wrap_latex else x
+
+    def choose_el(x, i, j):
+        if i == 0 and first_row_is_header:
+            return f'<th>{x}</th>'
+        elif j == 0 and first_col_is_header:
+            return f'<th>{x}</th>'
+        else:
+            return f'<td>{wrap(x)}</td>'
+
+
+    html = f'<table style="{width}">\n'
+    for i, row in enumerate(table):
+        html += "<tr>\n"
+        elements = [choose_el(col, i, j) for j, col in enumerate(row)]
+        html += "\n".join(elements)
+        html += "\n</tr>"
+    html += "\n</table>"
+    return html
