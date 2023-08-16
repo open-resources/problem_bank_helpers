@@ -396,7 +396,7 @@ def convert_markdown_table(table, width="100%", first_row_is_header=True, first_
     Convert a python table to HTML\n
     Example usage:\n
     server.py: data["params"]["table1"] = pbh.convert_markdown_table([["a", "b", "c"], ["x", "1"]], wrap_latex=True)\n
-    markdown: {{ params.table1 }}
+    markdown: {{{ params.table1 }}}
 
     Args:
         table (list): A list of lists representing the table
