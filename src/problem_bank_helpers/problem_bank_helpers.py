@@ -391,7 +391,7 @@ def string_to_pl_user_file(string, data):
     else:
         data["submitted_answers"]["_files"] = [parsed_file]
 
-def convert_markdown_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_latex=False, wrap_header_latex=False):
+def create_html_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_header_latex=False, wrap_nonheader_latex=False, ):
     """
     Convert a python table to HTML\n
     Example usage:\n
