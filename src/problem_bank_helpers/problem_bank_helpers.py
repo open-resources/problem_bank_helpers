@@ -369,17 +369,17 @@ def backticks_to_code_tags(data):
                     value = value.replace("\\`", "`")  # Replace escaped backticks
                     data["params"][param][answer]["value"] = value
 
-def base64_encode(string):
+def base64_encode(s):
     """Encode a regular string into a base64 representation to act as a file for prarielearn to store
     """
     # Based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/exampleCourse/questions/demo/autograder/python/leadingTrailing/server.py#L9-L11
-    return base64.b64encode(string.encode("utf-8")).decode("utf-8")
+    return base64.b64encode(s.encode("utf-8")).decode("utf-8")
 
-def base64_decode(file):
+def base64_decode(f):
     """Decode a base64 string (which is a file) from prairielearn into a useable string
     """
     # symetrical to base64_encode_string
-    return base64.b64decode(to_decode.encode("utf-8")).decode("utf-8")
+    return base64.b64decode(f.encode("utf-8")).decode("utf-8")
 
 def string_to_pl_user_file(string, data):
     """Encode a string to base64 and add it as the user submitted code file
