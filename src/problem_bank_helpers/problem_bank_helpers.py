@@ -428,3 +428,29 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         html += "\n</tr>"
     html += "\n</table>"
     return html
+
+
+def mc(data, part_num, choices):
+    """
+    Adds multiple choice to data from dictionary
+
+    Args:
+        choices (dict): the multiple-choice dictionary
+
+    Example:
+        options = {
+            'option1 goes here': ['correct', 'Nice work!'],
+            'option2 goes here': ['Incorrect', 'Incorrect, try again!'],
+            ....
+        }
+
+        mc(data2, 1, options)
+
+    """
+    i = 0
+    for key, value in choices.items():
+        data['params'][f'part{part_num}'][f'ans{i+1}']['value'] = key
+        is_correct = value[0].strip().lower() == 'correct'
+        data['params'][f'part{part_num}'][f'ans{i+1}']['correct'] = is_correct
+        data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = value[1]
+        i = i + 1
