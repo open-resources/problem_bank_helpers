@@ -447,10 +447,12 @@ def mc(data, part_num, choices):
         mc(data2, 1, options)
 
     """
-    i = 0
-    for key, value in choices.items():
+    for i, (key, value) in enumerate(choices.items()):
         data['params'][f'part{part_num}'][f'ans{i+1}']['value'] = key
         is_correct = value[0].strip().lower() == 'correct'
         data['params'][f'part{part_num}'][f'ans{i+1}']['correct'] = is_correct
-        data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = value[1]
-        i = i + 1
+
+        try:
+            data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = value[1]
+        except IndexError:
+            data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = "Feedback is not available"
