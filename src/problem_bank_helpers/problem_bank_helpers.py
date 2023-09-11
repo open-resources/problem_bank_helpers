@@ -430,7 +430,7 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
     return html
 
 
-def mc(data, part_num, choices):
+def template_mc(data, part_num, choices):
     """
     Adds multiple choice to data from dictionary
 
