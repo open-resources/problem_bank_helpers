@@ -444,7 +444,7 @@ def template_mc(data, part_num, choices):
             ....
         }
 
-        mc(data2, 1, options)
+        template_mc(data2, 1, options)
 
     """
     for i, (key, value) in enumerate(choices.items()):
