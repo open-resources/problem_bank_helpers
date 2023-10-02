@@ -185,9 +185,9 @@ def roundp(*args,**kwargs):
     num_str = str(float(a[0]))
 
     # Create default sigfigs if necessary
-    if kw.get('sigfigs',None):
+    if kw.get('sigfigs',None) != None:
         z = kw['sigfigs']
-    elif kw.get('decimals', None):
+    elif kw.get('decimals', None) != None:
         z = kw['decimals']
     else:
         z = 3 # Default sig figs
