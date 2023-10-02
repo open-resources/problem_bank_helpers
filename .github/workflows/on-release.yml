@@ -1,6 +1,7 @@
 name: Push Updated Problem Bank Helpers to Dependent Repos
 
 on: 
+  workflow_dispatch:
   release:
     types: [published]
 
