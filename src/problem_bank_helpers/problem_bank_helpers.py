@@ -214,7 +214,6 @@ def roundp(*args,**kwargs):
     # sigfig.round doesn't like zero
     if abs(float(num_str)) == 0:
         result = num_str
-        print("num is zero: " + result + "\n")
     else:
         result = sigfig.round(num_str,**kwargs)
 
