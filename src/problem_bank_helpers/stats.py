@@ -50,7 +50,7 @@ def shaded_normal_density(
     figsize : tuple of 2 floats or None, default: (8, 6)
         The size of the plot in inches. If None, the default matplotlib figure size will be used as this is passed to `matplotlib.pyplot.figure`.
     color : color, default: 'xkcd:sky blue'
-        The color of the shaded area as a valid <matplotlib color https://matplotlib.org/stable/users/explain/colors/colors.html>_.
+        The color of the shaded area as a valid `matplotlib color <https://matplotlib.org/stable/users/explain/colors/colors.html>`__.
     x_label : str, default: 'x'
         The label for the x-axis.
     y_label : str, default: 'f(x; μ,σ)'
@@ -74,9 +74,9 @@ def shaded_normal_density(
 
     References
     ----------
-    Based off of an R function written by Dr. Irene Vrbick for making `shaded normal density curves <https://irene.vrbik.ok.ubc.ca/blog/2021-11-04-shading-under-the-normal-curve/>`_.
+    Based off of an R function written by Dr. Irene Vrbick for making `shaded normal density curves <https://irene.vrbik.ok.ubc.ca/blog/2021-11-04-shading-under-the-normal-curve/>`__.
 
-    The R function by Dr. Irene Vrbick was adapted from `here <http://rstudio-pubs-static.s3.amazonaws.com/78857_86c2403ca9c146ba8fcdcda79c3f4738.html>`_.
+    The R function by Dr. Irene Vrbick was adapted from `here <http://rstudio-pubs-static.s3.amazonaws.com/78857_86c2403ca9c146ba8fcdcda79c3f4738.html>`__.
     """
     if not isinstance(mean, (float, int)):
         raise TypeError(f"mean must be a number, not a {mean.__class__.__name__!r}")
