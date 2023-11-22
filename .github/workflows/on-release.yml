@@ -1,6 +1,7 @@
 name: Push Updated Problem Bank Helpers to Dependent Repos
 
 on: 
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -21,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false # if one repo fails, continue with the others, it might be unrelated
       matrix:
-        repo: [PrairieLearnUBC/pl-ubc-opb000, PrairieLearnUBC/pl-ubc-opb100] # add more repos here
+        repo: [PrairieLearnUBC/pl-ubc-opb000, PrairieLearnUBC/pl-ubc-opb100, PrairieLearnUBC/pl-ubc-phys111, PrairieLearnUBC/pl-ubc-phys112, PrairieLearnUBC/pl-ubc-phys121,PrairieLearnUBC/pl-ubc-phys122, PrairieLearnUBC/pl-ubc-apsc181] # add more repos here
         # if the token needs to be different per repo, add a token matrix using the extend matrix syntax
         # as shown here: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#example-expanding-configurations
     steps:

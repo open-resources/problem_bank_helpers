@@ -185,9 +185,9 @@ def roundp(*args,**kwargs):
     num_str = str(float(a[0]))
 
     # Create default sigfigs if necessary
-    if kw.get('sigfigs',None):
+    if kw.get('sigfigs',None) != None:
         z = kw['sigfigs']
-    elif kw.get('decimals', None):
+    elif kw.get('decimals', None) != None:
         z = kw['decimals']
     else:
         z = 3 # Default sig figs
@@ -214,7 +214,6 @@ def roundp(*args,**kwargs):
     # sigfig.round doesn't like zero
     if abs(float(num_str)) == 0:
         result = num_str
-        print("num is zero: " + result + "\n")
     else:
         result = sigfig.round(num_str,**kwargs)
 
@@ -428,3 +427,30 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         html += "\n</tr>"
     html += "\n</table>"
     return html
+
+def template_mc(data, part_num, choices):
+    """
+    Adds multiple choice to data from dictionary
+
+    Args:
+        choices (dict): the multiple-choice dictionary
+
+    Example:
+        options = {
+            'option1 goes here': ['correct', 'Nice work!'],
+            'option2 goes here': ['Incorrect', 'Incorrect, try again!'],
+            ....
+        }
+
+        template_mc(data2, 1, options)
+
+    """
+    for i, (key, value) in enumerate(choices.items()):
+        data['params'][f'part{part_num}'][f'ans{i+1}']['value'] = key
+        is_correct = value[0].strip().lower() == 'correct'
+        data['params'][f'part{part_num}'][f'ans{i+1}']['correct'] = is_correct
+
+        try:
+            data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = value[1]
+        except IndexError:
+            data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = "Feedback is not available"
