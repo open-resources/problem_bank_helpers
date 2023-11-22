@@ -70,10 +70,7 @@ def test_missing_values(file_path):
 
 def test_backticks_to_code_simple_invalid_params():
     case = {"params": {"part1": 1, "part2": {"ans1": {1}}}}
-    try:
-        pbh.backticks_to_code_tags(case)
-    except:
-        pytest.fail(f"Error invalid backticks_to_code_tags params")
+    pbh.backticks_to_code_tags(case)
 
 def test_backticks_to_code_skip_invalid_params():
     """Test rounding an int with specified sigfigs"""
@@ -96,7 +93,4 @@ def test_backticks_to_code_skip_invalid_params():
         },
     }
 
-    try:
-        pbh.backticks_to_code_tags(data)
-    except:
-        pytest.fail(f"Error invalid backticks_to_code_tags params")
+    pbh.backticks_to_code_tags(data)
