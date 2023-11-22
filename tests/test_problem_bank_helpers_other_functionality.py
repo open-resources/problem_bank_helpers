@@ -68,7 +68,10 @@ def test_missing_values(file_path):
     assert data.isnull().sum().sum() == 0
 
 
-# Test round_sig function
+def test_backticks_to_code_simple_invalid_params():
+    case = {"params": {"part1": 1, "part2": {"ans1": {1}}}}
+    assert isinstance(pbh.backticks_to_code_tags(case), None)
+
 def test_backticks_to_code_skip_invalid_params():
     """Test rounding an int with specified sigfigs"""
     data = {
