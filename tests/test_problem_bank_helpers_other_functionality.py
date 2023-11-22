@@ -73,7 +73,7 @@ def test_backticks_to_code_simple_invalid_params():
     try:
         pbh.backticks_to_code_tags(case)
     except:
-        pytest.fail(f"Error invalid backticks_to_code_tags params: {case}")
+        pytest.fail(f"Error invalid backticks_to_code_tags params")
 
 def test_backticks_to_code_skip_invalid_params():
     """Test rounding an int with specified sigfigs"""
@@ -99,4 +99,4 @@ def test_backticks_to_code_skip_invalid_params():
     try:
         pbh.backticks_to_code_tags(data)
     except:
-        pytest.fail(f"Error invalid backticks_to_code_tags params: {data}")
+        pytest.fail(f"Error invalid backticks_to_code_tags params")
