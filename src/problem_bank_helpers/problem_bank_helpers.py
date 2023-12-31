@@ -349,10 +349,12 @@ def backticks_to_code_tags(data):
     """
     params = data["params"]
     for param, param_data in params.items():
-        if not param.startswith("part"):
+        if not param.startswith("part") or not isinstance(param_data, dict):
             continue
         for answer, answer_data in param_data.items():
             if any(opt in answer for opt in {"ans", "statement", "option"}):
+                if not isinstance(answer_data, dict) or not "value" in answer_data:
+                    continue
                 if isinstance(value := answer_data["value"], str):
                     value = re.sub(
                         r"```(?P<language>\w+)?(?(language)(\{(?P<highlighting>[\d,-]*)\})?|)(?P<Code>[^`]+)```",

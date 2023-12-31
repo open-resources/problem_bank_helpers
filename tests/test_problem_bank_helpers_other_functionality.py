@@ -1,4 +1,5 @@
 from src.problem_bank_helpers import __version__
+from src.problem_bank_helpers import problem_bank_helpers as pbh
 import pandas as pd
 import pytest
 import tempfile
@@ -65,3 +66,31 @@ def test_missing_values(file_path):
 
     # Test for missing or null values
     assert data.isnull().sum().sum() == 0
+
+
+def test_backticks_to_code_simple_invalid_params():
+    case = {"params": {"part1": 1, "part2": {"ans1": {1}}}}
+    pbh.backticks_to_code_tags(case)
+
+def test_backticks_to_code_skip_invalid_params():
+    """Test rounding an int with specified sigfigs"""
+    data = {
+        "params": {
+            "part1": {
+                "ans": { # /statement/option
+                    "anything": {
+                        "value": "This is a test"
+                    },
+                    "num": 1,
+                    "another": {
+                        "foo": False,
+                    }
+                },
+                "option": 1,
+                "statement": True,
+                "something": 2,
+            }
+        },
+    }
+
+    pbh.backticks_to_code_tags(data)
