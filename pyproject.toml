@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "problem_bank_helpers"
-version = "0.2.5"
+version = "0.2.6"
 description = "Helpful utilities for the open problem bank."
 authors = ["Firas Moosvi and Jake Bobowski"]
 license = "MIT"
