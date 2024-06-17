@@ -1,6 +1,6 @@
-from src.problem_bank_helpers import __version__
-from src.problem_bank_helpers import problem_bank_helpers as pbh
 import pytest
+
+import problem_bank_helpers as pbh
 
 def idfn(input):
     if str(input)[0:3] == "id_":

@@ -1,23 +1,21 @@
 name: Push Updated Problem Bank Helpers to Dependent Repos
 
 on: 
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: 'Version being updated to'
   workflow_dispatch:
-  release:
-    types: [published]
+    inputs:
+      version:
+        type: string
+        required: true
+        description: 'Version being updated to'
 
 jobs:
-  get-version:
-    runs-on: ubuntu-latest
-    env:
-      TAG_NAME: ${{ github.event.release.tag_name }}
-    outputs:
-        ver: ${{ steps.version_name.outputs.version }}
-    steps:
-      - name: Strip leading 'v' from tag and return as output
-        id: version_name
-        run: echo "version=$(echo ${TAG_NAME/#v/})" >> $GITHUB_OUTPUT
-  push-to-dependents:
-    needs: get-version
+  push-to-question-banks:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false # if one repo fails, continue with the others, it might be unrelated
@@ -46,5 +44,5 @@ jobs:
           git config --global user.name 'fmoosvi'
           git config --global user.email 'firas.moosvi@ubc.ca'
           git add serverFilesCourse
-          git commit -am "Automatic GH Action to update problem_bank_helpers to ${{ needs.get-version.outputs.ver }}"
+          git commit -am "Automatic GH Action to update problem_bank_helpers to ${{ github.event.inputs.version }}"
           git push

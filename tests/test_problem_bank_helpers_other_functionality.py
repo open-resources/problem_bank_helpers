@@ -1,21 +1,15 @@
-from src.problem_bank_helpers import __version__
-from src.problem_bank_helpers import problem_bank_helpers as pbh
+import importlib.resources
+import os
+import tempfile
+
 import pandas as pd
 import pytest
-import tempfile
-import pathlib
-import os
 
-files = sorted(
-    [
-        file.name
-        for file in pathlib.Path(
-            "src/problem_bank_helpers/data/"
-        ).iterdir()
-    ]
-)
+import problem_bank_helpers as pbh
 
-files = [("src/problem_bank_helpers/data/" + f) for f in files if f != 'empty.csv']
+files = sorted(importlib.resources.files("problem_bank_helpers.data").iterdir())
+
+files = [pytest.param(f, id=f.name) for f in files if f.name != 'empty.csv']
 
 
 @pytest.mark.parametrize("file_path", files)

@@ -1,4 +1,4 @@
-from src.problem_bank_helpers import __version__
+from problem_bank_helpers import __version__
 
 def test_version():
     assert __version__ == '0.2.7'
