@@ -363,25 +363,26 @@ def backticks_to_code_tags(data):
                     value = value.replace("\\`", "`")  # Replace escaped backticks
                     data["params"][param][answer]["value"] = value
 
-def base64_encode_string(string):
-    """Encode a string into a base64 representation to act as a file for prarielearn
+def base64_encode(s):
+    """Encode a regular string into a base64 representation to act as a file for prarielearn to store
     """
     # Based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/exampleCourse/questions/demo/autograder/python/leadingTrailing/server.py#L9-L11
-    return base64.b64encode(string.encode("utf-8")).decode("utf-8")
+    return base64.b64encode(s.encode("utf-8")).decode("utf-8")
 
-def base64_decode_file(file):
-    """Decode a base64 string which is a file from prairielearn into a useable string
+def base64_decode(f):
+    """Decode a base64 string (which is a file) from prairielearn into a useable string
     """
     # symetrical to base64_encode_string
-    return base64.b64decode(to_decode.encode("utf-8")).decode("utf-8")
+    return base64.b64decode(f.encode("utf-8")).decode("utf-8")
 
-def string_to_pl_user_file(string, data):
+def string_to_pl_user_file(string, data, name = "user_code.py"):
     """Encode a string to base64 and add it as the user submitted code file
     """
     # partially based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/apps/prairielearn/elements/pl-file-upload/pl-file-upload.py#L114C1-L119
-    parsed_file = {"name": "user_code.py", "contents": base64_encode_string(answer)}
+    parsed_file = {"name": name, "contents": base64_encode(string)}
     if isinstance(data["submitted_answers"].get("_files", None), list):
-        data["submitted_answers"]["_files"].append(parsed_file)
+        files = [file for file in data["submitted_answers"]["_files"] if file["name"] != name]
+        data["submitted_answers"]["_files"] = files + [parsed_file]
     else:
         data["submitted_answers"]["_files"] = [parsed_file]
 
@@ -422,7 +423,6 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         html += "\n</tr>"
     html += "\n</table>"
     return html
-
 
 def template_mc(data, part_num, choices):
     """
