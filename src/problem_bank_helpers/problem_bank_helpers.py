@@ -17,28 +17,18 @@ round_context.rounding = ROUND_HALF_UP
 ## Load data and dictionaries
 
 ## Better way of loading data and dictionaries
-# Based on this Stack Overflow post: https://stackoverflow.com/questions/65397082/using-resources-module-to-import-data-files
+# Previously based on this Stack Overflow post: https://stackoverflow.com/questions/65397082/using-resources-module-to-import-data-files
 
-with importlib.resources.open_text("problem_bank_helpers.data", "animals.csv") as file:
-    animals = pd.read_csv(file)["Animals"].tolist()
+data_dir = importlib.resources.files(__package__) / "data"
 
-with importlib.resources.open_text("problem_bank_helpers.data", "names.csv") as file:
-    names = pd.read_csv(file)["Names"].tolist()
+animals = pd.read_csv(data_dir / "animals.csv")["Animals"].tolist()
+names = pd.read_csv(data_dir / "names.csv")["Names"].tolist()
+jumpers = pd.read_csv(data_dir / "jumpers.csv")["Jumpers"].tolist()
+vehicles = pd.read_csv(data_dir / "vehicles.csv")["Vehicles"].tolist()
+manual_vehicles = pd.read_csv(data_dir / "manual_vehicles.csv")["Manual Vehicles"].tolist()
+metals = pd.read_csv(data_dir / "metals.csv")["Metal"].tolist()
+T_c = pd.read_csv(data_dir / "metals.csv")["Temp Coefficient"].tolist()
 
-with importlib.resources.open_text("problem_bank_helpers.data", "jumpers.csv") as file:
-    jumpers = pd.read_csv(file)["Jumpers"].tolist()
-
-with importlib.resources.open_text("problem_bank_helpers.data", "vehicles.csv") as file:
-    vehicles = pd.read_csv(file)["Vehicles"].tolist()
-
-with importlib.resources.open_text("problem_bank_helpers.data", "manual_vehicles.csv") as file:
-    manual_vehicles = pd.read_csv(file)["Manual Vehicles"].tolist()
-
-with importlib.resources.open_text("problem_bank_helpers.data", "metals.csv") as file:
-    metals = pd.read_csv(file)["Metal"].tolist()
-
-with importlib.resources.open_text("problem_bank_helpers.data", "metals.csv") as file:
-    T_c = pd.read_csv(file)["Temp Coefficient"].tolist()
 
 ## End Load data
 
