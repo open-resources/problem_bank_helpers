@@ -14,14 +14,8 @@ echo $ret
 FROM=$(echo $ret | awk '{ print $4; }')
 TO=$(echo $ret | awk '{ print $6; }')
 
-# change any references to the old version in the project
-echo "Bumping version from $FROM to $TO in src/problem_bank_helpers/__init__.py"
-sed -i "s/__version__ = \"$FROM\"/__version__ = \"$TO\"/g" src/problem_bank_helpers/__init__.py
-echo "Bumping version from $FROM to $TO in tests/test_problem_bank_helpers.py"
-sed -i "s/__version__ == \"$FROM\"/__version__ == \"$TO\"/g" tests/test_problem_bank_helpers.py
-
 # commit the changes
-git add src/problem_bank_helpers/__init__.py tests/test_problem_bank_helpers.py pyproject.toml
+git add pyproject.toml
 git commit -m "Increment version from $FROM to $TO"
 
 # create a tag
