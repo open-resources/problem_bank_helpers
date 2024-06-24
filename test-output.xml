@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.120" timestamp="2021-06-13T19:44:02.861767" hostname="Firas-keyboardMBP-6.local"><testcase classname="tests.test_problem_bank_helpers" name="test_version" time="0.001" /></testsuite></testsuites>
