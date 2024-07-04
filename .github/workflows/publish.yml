@@ -184,3 +184,4 @@ jobs:
     needs: [publish]
     with:
       version: ${{ github.event.release.tag_name }}
+    secrets: inherit
