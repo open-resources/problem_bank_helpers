@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,8 +28,7 @@ def shaded_normal_density(
     legend_text: str | None = None,
     **kwargs,
 ) -> Figure:
-    """
-    Generate a normal distribution plot with optional listed probability calculation.
+    """Generate a normal distribution plot with optional listed probability calculation.
 
     Parameters
     ----------
@@ -237,3 +236,155 @@ def shaded_normal_density(
         ax.set_title(legend_text or f"\u03BC = {mean}, \u03C3 = {sd}")
 
     return fig
+
+
+def shaded_hypothesis_test(
+    critical_value: float,
+    tail: Literal["left", "right", "both"],
+    /,
+    mean: float = 0,
+    sd: float = 1,
+    rsd: float = 4,
+    figsize: tuple[float, float] | None = (8, 6),
+    color: Any = "xkcd:sky blue",
+    x_label: str = "x",
+    y_label: str = "Probability Density",
+    legend: str | None = None,
+    **kwargs
+) -> Figure:
+    """Generate a normal distribution plot with appropriate tails for a hypothesis test.
+
+    Parameters
+    ----------
+    critical_value : float
+        The critical value to plot. If ``tail`` is ``both``, :code:`-abs(critical_value)` is used for the left tail
+        and :code:`abs(critical_value)` is used for the right tail.
+    tail : ``left`` or ``right`` or ``both``
+        The type of hypothesis test to plot.
+    mean : float
+        The mean of the normal distribution. Defaults to ``0``
+    sd : float
+        The standard deviation of the normal distribution. Defaults to ``1``
+    rsd : float
+        The number of standard deviations to plot on either side of the mean.  Defaults to ``4``
+    figsize : tuple or tuple[float, float] or None
+        The size of the plot in inches. If None, the default matplotlib figure size
+        will be used as this is passed to :func:`matplotlib.pyplot.figure`. Defaults to ``(8, 6)``
+    color : Any
+        The color of the shaded area as a valid :doc:`matplotlib color <mpl:users/explain/colors/colors>`. Defaults to ``xkcd:sky blue``
+    x_label : str
+        The label for the x-axis. Defaults to ``x``
+    y_label : str
+        The label for the y-axis. Defaults to ``Probability Density``
+    legend : str or None, Optional
+        The text to display in the legend (title) of the plot.
+    **kwargs
+        Additional keyword arguments to pass to :func:`matplotlib.pyplot.figure`.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The generated matplotlib Figure object.
+
+    Raises
+    ------
+    TypeError
+        If the input parameters are not of the expected type.
+    ValueError
+        If the input values are out of the expected range.
+
+    Examples
+    --------
+
+    Left-tailed hypothesis test with a critical value of ``-1.645`` for the standard normal ``N(0,1)``
+    
+    .. plot::
+        :context: reset
+
+        pbh.stats.shaded_hypothesis_test(-1.645, "left")
+
+    Right-tailed hypothesis test with a critical value of ``1.645`` for the standard normal ``N(0,1)``
+    
+    .. plot::
+        :context: reset
+
+        pbh.stats.shaded_hypothesis_test(1.645, "right")
+    
+    Two-tailed hypothesis test with a critical value of ``±1.96`` for the standard normal ``N(0,1)``
+    
+    .. plot::
+        :context: reset
+
+        pbh.stats.shaded_hypothesis_test(1.96, "both")
+    """
+    if not isinstance(mean, (float, int)):
+        msg = f"mean must be a number, not a {mean.__class__.__name__!r}!"
+        raise TypeError(msg)
+    if not isinstance(sd, (float, int)):
+        msg = f"sd must be a number, not a {sd.__class__.__name__!r}!"
+        raise TypeError(msg)
+    if not isinstance(rsd, (float, int)):
+        msg = f"rsd must be a number, not a {rsd.__class__.__name__!r}!"
+        raise TypeError(msg)
+    if not isinstance(critical_value, (float, int)):
+        msg = f"critical_value must be a number, not a {critical_value.__class__.__name__!r}!"
+        raise TypeError(msg)
+    if tail not in {"left", "right", "both"}:
+        msg = f"tail must be one of 'left', 'right', or 'both', not {tail!r}!"
+        raise ValueError(msg)
+    
+    # Define the normal distribution
+    plot_to = rsd * sd
+    xx = np.linspace(mean - plot_to, mean + plot_to, 100)
+    yy = stats.norm.pdf(xx, mean, sd)
+    
+    fig = plt.figure(figsize=figsize, **kwargs)
+    ax = fig.gca()
+    ax.plot(xx, yy)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+    match tail:
+        case "left":
+            x = np.linspace(xx[0], critical_value, 100)
+            y = stats.norm.pdf(x, mean, sd)
+            # fmt: off
+            ax.fill(
+                np.concatenate([[xx[0]], x, [critical_value]]),
+                np.concatenate([[0], y, [0]]),
+                color,
+            )
+        case "right":
+            x = np.linspace(critical_value, xx[-1], 100)
+            y = stats.norm.pdf(x, mean, sd)
+            # fmt: off
+            ax.fill(
+                np.concatenate([[critical_value], x, [xx[-1]]]),
+                np.concatenate([[0], y, [0]]),
+                color,
+            )
+        case "both":
+            right_crit = abs(critical_value)
+            left_crit = -right_crit
+            left_x = np.linspace(xx[0], left_crit, 100)
+            left_y = stats.norm.pdf(left_x, mean, sd)
+            right_x = np.linspace(critical_value, xx[-1], 100)
+            right_y = stats.norm.pdf(right_x, mean, sd)
+            # fmt: off
+            ax.fill(
+                np.concatenate([[xx[0]], left_x, [left_crit]]),
+                np.concatenate([[0], left_y, [0]]),
+                color,
+                np.concatenate([[right_crit], right_x, [xx[-1]]]),
+                np.concatenate([[0], right_y, [0]]),
+                color,
+            )
+        case other:
+            msg = f"tail must be one of 'left', 'right', or 'both', not {other!r}!"
+            raise ValueError(msg)
+    
+    if legend is not None:
+        ax.set_title(legend)
+
+    return fig
+
