@@ -13,3 +13,4 @@ To get started, check out the sections below:
    usage
    contributing
    conduct
+   api

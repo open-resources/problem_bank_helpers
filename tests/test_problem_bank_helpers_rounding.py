@@ -2,6 +2,7 @@ import pytest
 
 import problem_bank_helpers as pbh
 
+
 def idfn(input):
     if str(input)[0:3] == "id_":
         return input
@@ -131,7 +132,7 @@ def test_sigfigs(test_group, variables):
         assert (pbh.sigfigs(test_input) == correct_sigfigs), f"input: {test_input}, output: {pbh.sigfigs(test_input)}"
 
 def test_sigfigs_float_input_fail():
-    with pytest.raises(Exception):
+    with pytest.raises(expected_exception=Exception):
         pbh.sigfigs(float(1))
 
 
@@ -213,29 +214,29 @@ def test_num_as_str_rigorous(id, input, digits_after_decimal, expected_result):
 
 
 # Test roundp function
-def test_roundp_with_overriden_sigfig_settings():
+@pytest.mark.parametrize(
+    "value, sigfigs, expected_result",
+    [
+        (123.456, 2, 120.0),
+        (987, 2, 990),
+        ('99.8765', 4, '99.88'),
+    ],
+)
+def test_roundp_with_overridden_sigfig_settings(value: float | str, sigfigs: int, expected_result: float | str):
     """Test rounding a float with specified sigfigs"""
-    assert pbh.roundp(123.456, sigfigs=2) == 120.0
+    assert pbh.roundp(value, sigfigs=sigfigs) == expected_result
 
-def test_roundp_with_overriden_decimal_settings():
-    """Test rounding a float with specified decimals"""
-    assert pbh.roundp(123.456, decimals=2) == 123.45
-
-def test_roundp_with_overriden_sigfig_settings():
-    """Test rounding an integer with specified decimals"""
-    assert pbh.roundp(987, sigfigs=2) == 990
-
-def test_roundp_with_overriden_decimal_settings():
-    """Test rounding an integer with specified decimals"""
-    assert pbh.roundp(987, decimals=2) == 987.00
-
-def test_roundp_with_overriden_sigfig_settings():
-    """Test rounding a string with default sigfigs"""
-    assert pbh.roundp('99.8765', sigfigs=4) == '99.88'
-
-def test_roundp_with_overriden_decimal_settings():
-    """Test rounding a string with default sigfigs"""
-    assert pbh.roundp('99.8765', decimals=2) == '99.88'
+@pytest.mark.parametrize(
+    "value, decimals, expected_result",
+    [
+        (123.456, 2, 123.45),
+        (987, 2, 987.00),
+        ('99.8765', 2, '99.88'),
+    ],
+)
+def test_roundp_with_overridden_decimal_settings(value: float | str, decimals: int, expected_result: float | str):
+    """Test rounding a float with specified sigfigs"""
+    assert pbh.roundp(value, decimals=decimals) == expected_result
 
 def test_roundp_with_default_settings():
     """Test rounding a string with default sigfigs"""
