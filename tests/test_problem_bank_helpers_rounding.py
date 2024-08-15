@@ -229,7 +229,7 @@ def test_roundp_with_overridden_sigfig_settings(value: float | str, sigfigs: int
 @pytest.mark.parametrize(
     "value, decimals, expected_result",
     [
-        (123.456, 2, 123.45),
+        (123.456, 2, 123.46),
         (987, 2, 987.00),
         ('99.8765', 2, '99.88'),
     ],
