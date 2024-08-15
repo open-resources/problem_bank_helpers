@@ -2,13 +2,15 @@
 # Date: 2021-06-13
 
 import base64
-from collections import defaultdict
-import numpy as np
-import sigfig
-import pandas as pd
 import importlib.resources
-from decimal import Decimal, getcontext, ROUND_HALF_UP
 import re
+from collections import defaultdict
+from decimal import ROUND_HALF_UP, Decimal, getcontext
+
+import numpy as np
+import pandas as pd
+import sigfig
+
 
 # Set rounding context
 round_context = getcontext()
@@ -19,28 +21,42 @@ round_context.rounding = ROUND_HALF_UP
 ## Better way of loading data and dictionaries
 # Previously based on this Stack Overflow post: https://stackoverflow.com/questions/65397082/using-resources-module-to-import-data-files
 
-data_dir = importlib.resources.files(__package__) / "data"
+data_dir = importlib.resources.files("problem_bank_helpers.data")
 
-animals = pd.read_csv(data_dir / "animals.csv")["Animals"].tolist()
-names = pd.read_csv(data_dir / "names.csv")["Names"].tolist()
-jumpers = pd.read_csv(data_dir / "jumpers.csv")["Jumpers"].tolist()
-vehicles = pd.read_csv(data_dir / "vehicles.csv")["Vehicles"].tolist()
-manual_vehicles = pd.read_csv(data_dir / "manual_vehicles.csv")["Manual Vehicles"].tolist()
-metals = pd.read_csv(data_dir / "metals.csv")["Metal"].tolist()
-T_c = pd.read_csv(data_dir / "metals.csv")["Temp Coefficient"].tolist()
+animals: list[str] = pd.read_csv(data_dir / "animals.csv")["Animals"].tolist()  # pyright: ignore[reportArgumentType]
+names: list[str] = pd.read_csv(data_dir / "names.csv")["Names"].tolist()  # pyright: ignore[reportArgumentType]
+jumpers: list[str] = pd.read_csv(data_dir / "jumpers.csv")["Jumpers"].tolist()  # pyright: ignore[reportArgumentType]
+vehicles: list[str] = pd.read_csv(data_dir / "vehicles.csv")["Vehicles"].tolist()  # pyright: ignore[reportArgumentType]
+manual_vehicles: list[str] = pd.read_csv(data_dir / "manual_vehicles.csv")["Manual Vehicles"].tolist()  # pyright: ignore[reportArgumentType]
+metals: list[str] = pd.read_csv(data_dir / "metals.csv")["Metal"].tolist()  # pyright: ignore[reportArgumentType]
+T_c: list[float] = pd.read_csv(data_dir / "metals.csv")["Temp Coefficient"].tolist()  # pyright: ignore[reportArgumentType]
 
 
 ## End Load data
 
-def create_data2():
+def create_data2() -> defaultdict:
 
-    nested_dict = lambda: defaultdict(nested_dict)
+    nested_dict = lambda: defaultdict(nested_dict)  # noqa: E731
     return nested_dict()
 
-def sigfigs(x):
-    '''Returns the number of significant digits in a number. This takes into account
-       strings formatted in 1.23e+3 format and even strings such as 123.450 .
-       This has a limit of 16 sigfigs, which can be increased but doesn't seem practical'''
+def sigfigs(x: str) -> int:
+    """Returns the number of significant digits in a number represented as a string.
+    
+    This takes into account strings formatted in ``1.23e+3`` format and even strings such as ``123.450``.
+    This has a limit of 16 sigfigs, which can be increased but doesn't seem practical
+    
+    Args:
+        x (str): The number as a string
+
+    Returns:
+        int: The number of significant figures in the number
+
+    Examples:
+        >>> sigfigs("1.23e+3")
+        3
+        >>> sigfigs("123.450")
+        6
+    """
     # if x is negative, remove the negative sign from the string.
     if float(x) < 0:
         x = x[1:]
@@ -50,7 +66,7 @@ def sigfigs(x):
         # return the length of the numbers before the 'e'
         myStr = x.split('e')
 
-        return len( myStr[0] ) - (1 if '.' in x else 0) # to compensate for the decimal point
+        return len(myStr[0]) - (1 if '.' in x else 0) # to compensate for the decimal point
     else:
         # put it in e format and return the result of that
         ### NOTE: because of the 15 below, it may do crazy things when it parses 16 sigfigs
@@ -59,7 +75,7 @@ def sigfigs(x):
         if '.' in x:
             s = x.replace('.', '')
             #number of zeroes to add back in
-            l = len(s) - len(s.rstrip('0'))
+            l = len(s) - len(s.rstrip('0'))  # noqa: E741
             #strip off the python added zeroes and add back in the ones the user added
             n[0] = n[0].rstrip('0') + ''.join(['0' for num in range(l)])
         else:
@@ -69,7 +85,7 @@ def sigfigs(x):
     return sigfigs('e'.join(n))
 
 
-def round_sig(x, sig):
+def round_sig(x: float, sig: int) -> float:
     """
     Round a number to a specified number of significant digits.
 
@@ -80,8 +96,8 @@ def round_sig(x, sig):
     Returns:
         float or int: The rounded number retaining the type of the input.
     """
-    from math import log10, floor
-    if x == 0:
+    from math import floor, log10
+    if x == 0:  # noqa: SIM108
         y = 0
     else:
         y = sig - int(floor(log10(abs(x)))) - 1
@@ -136,17 +152,17 @@ def roundp(*args,**kwargs):
         num (number): Number to round or format.
 
     Returns:
-        float/str: Rounded number output to correct significant figures.
+        float | str: Rounded number output to correct significant figures.
     """
-    a = [item for item in args]
+    a = list(args)
     kw = {item:v for item,v in kwargs.items() if item in ['sigfigs', 'decimals']}
 
     num_str = str(float(a[0]))
 
     # Create default sigfigs if necessary
-    if kw.get('sigfigs',None) != None:
+    if kw.get('sigfigs') is not None:
         z = kw['sigfigs']
-    elif kw.get('decimals', None) != None:
+    elif kw.get('decimals') is not None:
         z = kw['decimals']
     else:
         z = 3 # Default sig figs
@@ -171,7 +187,7 @@ def roundp(*args,**kwargs):
         num_str = "e".join(split_string)
 
     # sigfig.round doesn't like zero
-    if abs(float(num_str)) == 0:
+    if abs(float(num_str)) == 0:  # noqa: SIM108
         result = num_str
     else:
         result = sigfig.round(num_str,**kwargs)
@@ -191,10 +207,10 @@ def round_str(*args,**kwargs):
     if type(args[0]) is str:
         return args[0]
 
-    if 'sigfigs' not in kwargs.keys() and 'decimals' not in kwargs.keys():
+    if 'sigfigs' not in kwargs and 'decimals' not in kwargs:
         kwargs['sigfigs'] = 2
 
-    if 'format' not in kwargs.keys():
+    if 'format' not in kwargs:
         if np.abs(args[0]) < 1:
             return roundp(*args,**kwargs,format='std')
         elif np.abs(args[0]) < 1E6:
@@ -221,9 +237,7 @@ def num_as_str(num, digits_after_decimal = 2):
 
     # Solution attributed to: https://stackoverflow.com/a/53329223
 
-    if type(num) == str:
-        return num
-    elif type(num) == dict:
+    if isinstance(num, (str, dict)):
         return num
     else:
         tmp = Decimal(str(num)).quantize(Decimal('1.'+'0'*digits_after_decimal))
@@ -307,8 +321,8 @@ def automatic_feedback(data,string_rep = None,rtol = None):
 # (2) the answer is right expect for the power of 10 multiplier or...
 # (3) answer has both a sign and exponent error.
 def ErrorCheck(errorCheck, subVariable, Variable, LaTeXstr, tolerance):
-    import math, copy
-    from math import log10, floor
+    import math
+    from math import floor, log10
     if errorCheck == 'true' or errorCheck == 'True' or errorCheck == 't' or errorCheck == 'T':
         if subVariable is not None and subVariable != 0 and Variable != 0:
             if math.copysign(1, subVariable) != math.copysign(1, Variable) and abs((abs(subVariable) - abs(Variable))/abs(Variable)) <= tolerance:
@@ -332,21 +346,21 @@ def ErrorCheck(errorCheck, subVariable, Variable, LaTeXstr, tolerance):
     else:
         return None
 
-def backticks_to_code_tags(data):
+def backticks_to_code_tags(data: dict) -> None:
     """
     Converts backticks to <code> tags, and code fences to <pl-code> tags for a filled PrairieLearn question data dictionary.
     Note: this only makes replacements multiple choice (and other similar question) answer options.
 
     Args:
-        html (str): The HTML to convert
+        data (dict): The filled PrairieLearn question data dictionary
     """
     params = data["params"]
     for param, param_data in params.items():
         if not param.startswith("part") or not isinstance(param_data, dict):
             continue
         for answer, answer_data in param_data.items():
-            if any(opt in answer for opt in {"ans", "statement", "option"}):
-                if not isinstance(answer_data, dict) or not "value" in answer_data:
+            if any(opt in answer for opt in ("ans", "statement", "option")):
+                if not isinstance(answer_data, dict) or "value" not in answer_data:
                     continue
                 if isinstance(value := answer_data["value"], str):
                     value = re.sub(
@@ -363,30 +377,54 @@ def backticks_to_code_tags(data):
                     value = value.replace("\\`", "`")  # Replace escaped backticks
                     data["params"][param][answer]["value"] = value
 
-def base64_encode(s):
+def base64_encode(s: str) -> str:
     """Encode a regular string into a base64 representation to act as a file for prarielearn to store
+
+    Args:
+        s (str): The string containing the file contents to encode
+
+    Returns:
+        str: A string containing the base64 encoded contents of the file
     """
     # Based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/exampleCourse/questions/demo/autograder/python/leadingTrailing/server.py#L9-L11
     return base64.b64encode(s.encode("utf-8")).decode("utf-8")
 
-def base64_decode(f):
+def base64_decode(f: str) -> str:
     """Decode a base64 string (which is a file) from prairielearn into a useable string
+
+    Args:
+        f (str): The string representation of a base64 encoded file
+
+    Returns:
+        str: The decoded contents of the file
     """
-    # symetrical to base64_encode_string
+    # symmetrical to base64_encode_string
     return base64.b64decode(f.encode("utf-8")).decode("utf-8")
 
-def string_to_pl_user_file(string, data, name = "user_code.py"):
+def string_to_pl_user_file(string: str, data: dict, name: str = "user_code.py") -> None:
     """Encode a string to base64 and add it as the user submitted code file
+
+    Args:
+        string (str): The string to encode and add as the user submitted code file
+        data (dict): The data dictionary to add the file to
+        name (str, optional): The name of the file to add. Defaults to "user_code.py".
     """
     # partially based off of https://github.com/PrairieLearn/PrairieLearn/blob/2ff7c5cc2435bae80c0ba512631749f9c3eadb43/apps/prairielearn/elements/pl-file-upload/pl-file-upload.py#L114C1-L119
     parsed_file = {"name": name, "contents": base64_encode(string)}
     if isinstance(data["submitted_answers"].get("_files", None), list):
         files = [file for file in data["submitted_answers"]["_files"] if file["name"] != name]
-        data["submitted_answers"]["_files"] = files + [parsed_file]
+        data["submitted_answers"]["_files"] = [*files, parsed_file]
     else:
         data["submitted_answers"]["_files"] = [parsed_file]
 
-def create_html_table(table, width="100%", first_row_is_header=True, first_col_is_header=True, wrap_header_latex=False, wrap_nonheader_latex=False, ):
+def create_html_table(
+    table: list[list[str]],
+    width: str = "100%",
+    first_row_is_header: bool = True,
+    first_col_is_header: bool = True,
+    wrap_header_latex: bool = False,
+    wrap_nonheader_latex: bool = False,
+) -> str:
     """
     Convert a python table to HTML\n
     Example usage:\n
@@ -400,6 +438,9 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         first_col_is_header (bool, optional): Whether the first column is a header. Defaults to True.
         wrap_nonheader_latex (bool, optional): Whether to wrap all non-header table cells in $ for LaTeX. Defaults to False.
         wrap_header_latex (bool, optional): Whether to wrap all header table cells in $ for LaTeX. Defaults to False.
+    
+    Returns:
+        str: The HTML representation of the table
     """
     def wrap(x):
         return f"${x}$" if wrap_nonheader_latex else x
@@ -407,9 +448,7 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
         return f"${x}$" if wrap_header_latex else x
 
     def choose_el(x, i, j):
-        if i == 0 and first_row_is_header:
-            return f'<th>{wrap_header(x)}</th>'
-        elif j == 0 and first_col_is_header:
+        if i == 0 and first_row_is_header or j == 0 and first_col_is_header:
             return f'<th>{wrap_header(x)}</th>'
         else:
             return f'<td>{wrap(x)}</td>'
@@ -424,29 +463,29 @@ def create_html_table(table, width="100%", first_row_is_header=True, first_col_i
     html += "\n</table>"
     return html
 
-def template_mc(data, part_num, choices):
+def template_mc(data: dict, part_num: int, choices: dict) -> None:
     """
     Adds multiple choice to data from dictionary
 
     Args:
+        data (dict): the data dictionary
+        part_num (int): the part number
         choices (dict): the multiple-choice dictionary
 
     Example:
-        options = {
-            'option1 goes here': ['correct', 'Nice work!'],
-            'option2 goes here': ['Incorrect', 'Incorrect, try again!'],
-            ....
-        }
-
-        template_mc(data2, 1, options)
-
+        >>> options = {
+        ...     "option1 goes here": ["correct", "Nice work!"],
+        ...     "option2 goes here": ["Incorrect", "Incorrect, try again!"],
+        ...     ...
+        ... }
+        >>> template_mc(data2, 1, options)
     """
-    for i, (key, value) in enumerate(choices.items()):
-        data['params'][f'part{part_num}'][f'ans{i+1}']['value'] = key
-        is_correct = value[0].strip().lower() == 'correct'
-        data['params'][f'part{part_num}'][f'ans{i+1}']['correct'] = is_correct
+    for i, (key, value) in enumerate(choices.items(), start=1):
+        data["params"][f"part{part_num}"][f"ans{i}"]["value"] = key
+        is_correct = value[0].strip().lower() == "correct"
+        data["params"][f"part{part_num}"][f"ans{i}"]["correct"] = is_correct
 
         try:
-            data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = value[1]
+            data["params"][f"part{part_num}"][f"ans{i}"]["feedback"] = value[1]
         except IndexError:
-            data['params'][f'part{part_num}'][f'ans{i+1}']['feedback'] = "Feedback is not available"
+            data["params"][f"part{part_num}"][f"ans{i}"]["feedback"] = "Feedback is not available"

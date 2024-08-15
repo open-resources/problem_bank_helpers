@@ -16,20 +16,61 @@ author = u"Firas Moosvi and Jake Bobowski"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "autoapi.extension",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.viewcode",
     "nbsphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.intersphinx",
+    "matplotlib.sphinxext.plot_directive",
 ]
-autoapi_type = "python"
-autoapi_dirs = ["../../src"]
-napoleon_numpy_docstring = True
+
 nbsphinx_execute = "always"
+autodoc_member_order = "bysource"
+autodoc_typehints = "none"
+
+# Napoleon settings
+napoleon_use_admonition_for_examples = True
+napoleon_use_admonition_for_notes = True
+napoleon_use_admonition_for_references = True
+
+plot_pre_code = """
+import numpy as np
+import matplotlib.pyplot as plt
+import problem_bank_helpers as pbh
+"""
+plot_formats = ["png"]
+plot_include_source = True
+plot_html_show_source_link = False
+plot_html_show_formats = False
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+# Links used for cross-referencing stuff in other documentation
+intersphinx_mapping = {
+    "py": ("https://docs.python.org/3", None),
+    "mpl": ("https://matplotlib.org/stable", None),
+}
+
+show_warning_types = True
+
+nitpick_ignore = [
+    ("py:class", "optional"),
+    ("py:class", "number"),
+    # ("py:class", "float/str"),
+    # ("py:class", "color"),
+    # ("py:class", "x; μ"),
+    # ("py:class", "\u03C3"),
+    # ("py:class", "'"),
+]
+
+# nitpick_ignore_regex = [
+#     ("py:class", r".*2 floats"),
+#     ("py:class", r"\d"),
+#     ("py:class", r"default:.*"),
+# ]
 
 # -- Options for HTML output -------------------------------------------------
 

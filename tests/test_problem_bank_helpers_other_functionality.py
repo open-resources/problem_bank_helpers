@@ -7,7 +7,8 @@ import pytest
 
 import problem_bank_helpers as pbh
 
-files = sorted(importlib.resources.files("problem_bank_helpers.data").iterdir())
+
+files = sorted(importlib.resources.files("problem_bank_helpers.data").iterdir())  # pyright: ignore[reportArgumentType]
 
 files = [pytest.param(f, id=f.name) for f in files if f.name != 'empty.csv']
 
@@ -27,7 +28,7 @@ def test_load_csv(file_path):
         # assert data.shape[0] == expected_num_rows
         # assert data.shape[1] == expected_num_cols
 
-    except IOError:
+    except OSError:
         # Handle file loading errors appropriately
         pytest.fail(f"Error loading file: {file_path}")
 
