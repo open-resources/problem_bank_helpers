@@ -1,42 +1,26 @@
-name: Push Updated Problem Bank Helpers to Dependent Repos
+name: Push Updated Problem Bank Helpers to a specific Dependent Repo
 
 on: 
-  workflow_call:
-    inputs:
-      version:
-        type: string
-        required: true
-        description: 'Version being updated to'
   workflow_dispatch:
     inputs:
       version:
         type: string
         required: true
         description: 'Version being updated to'
+      repo:
+        type: string
+        required: true
+        description: 'Dependent repo to update'
 
 jobs:
-  push-to-question-banks:
+  push-to-question-bank:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false # if one repo fails, continue with the others, it might be unrelated
-      matrix:
-        repo: 
-          - PrairieLearnUBC/pl-ubc-opb000
-          - PrairieLearnUBC/pl-ubc-opb100
-          - PrairieLearnUBC/pl-ubc-phys111
-          - PrairieLearnUBC/pl-ubc-phys112
-          - PrairieLearnUBC/pl-ubc-phys121
-          - PrairieLearnUBC/pl-ubc-phys122
-          - PrairieLearnUBC/pl-ubc-apsc181
-          - PrairieLearnUBC/pl-ubco-stat205
-          # add more repos here
-        # if the token needs to be different per repo, add a token matrix using the extend matrix syntax
-        # as shown here: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#example-expanding-configurations
+    if: ${{ github.actor_id == '2507459' || github.actor_id == '68259537' }}
     steps:
-      - name: Checkout ${{ matrix.repo }}
+      - name: Checkout ${{ github.event.inputs.repo }}
         uses: actions/checkout@v6 
         with: # checks out default branch
-          repository: ${{ matrix.repo }}
+          repository: ${{ github.event.inputs.repo }}
           token: ${{ secrets.PAT_GITHUB_PRAIRIELEARN }}
       - name: Setup Python
         uses: actions/setup-python@v6
