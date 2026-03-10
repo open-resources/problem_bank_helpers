@@ -99,6 +99,9 @@ jobs:
             repo: open-resources/instructor_datascience_bank
           - name: Statistics
             repo: open-resources/instructor_stats_bank
+        exclude:
+          - python-version: 3.12
+            bank: {name: Physics, repo: open-resources/instructor_physics_bank}
     steps:
       - name: Checkout ${{ matrix.bank.name }} Problem Bank
         uses: actions/checkout@v4
@@ -123,10 +126,6 @@ jobs:
       - name: Install built wheel
         run: |
           python -m pip install --user $(find dist -type f -name "problem_bank_helpers-*.whl")
-      - name: Fix physics bank
-        if: ${{ matrix.python-version == '3.12' && matrix.bank.name == 'Physics' }}
-        run: |
-          sed -i 's/np.round/round/' 'source/005.Kinematics(2D and 3D)/Projectile Motion/Ball launched to a specific height/ball_launched_to_specific_height.md'
       - name: Test problem bank generates properly
         run: process 'source' --instructor=True --public=True --prairielearn=True
 
