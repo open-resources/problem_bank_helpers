@@ -126,7 +126,7 @@ jobs:
       - name: Fix physics bank
         if: ${{ matrix.python-version == '3.12' && matrix.bank.name == 'Physics' }}
         run: |
-          sed -d 's/np.round/round' 'source/005.Kinematics(2D and 3D)/Projectile Motion/Ball launched to a specific height/ball_launched_to_specific_height.md'
+          sed -i 's/np.round/round/' 'source/005.Kinematics(2D and 3D)/Projectile Motion/Ball launched to a specific height/ball_launched_to_specific_height.md'
       - name: Test problem bank generates properly
         run: process 'source' --instructor=True --public=True --prairielearn=True
 
