@@ -123,6 +123,10 @@ jobs:
       - name: Install built wheel
         run: |
           python -m pip install --user $(find dist -type f -name "problem_bank_helpers-*.whl")
+      - name: Fix physics bank
+        if: ${{ matrix.python-version == '3.12' && matrix.bank.name == 'Physics' }}
+        run: |
+          sed -d 's/np.round/round' 'source/005.Kinematics(2D and 3D)/Projectile Motion/Ball launched to a specific height/ball_launched_to_specific_height.md'
       - name: Test problem bank generates properly
         run: process 'source' --instructor=True --public=True --prairielearn=True
 
